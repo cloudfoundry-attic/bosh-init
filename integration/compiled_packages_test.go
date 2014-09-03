@@ -106,7 +106,11 @@ type blobReader struct {
 }
 
 func (b blobReader) FileExists(fileName string) bool {
-	session, err := bmtestutils.RunCommand("tar", "-tf", b.blobPath, fileName)
+	session, err := bmtestutils.RunCommand("tar", "-tf", b.blobPath)
+	Expect(err).ToNot(HaveOccurred())
+	fmt.Println(string(session.Out.Contents()))
+
+	session, err = bmtestutils.RunCommand("tar", "-tf", b.blobPath, fileName)
 	Expect(err).ToNot(HaveOccurred())
 	return session.ExitCode() == 0
 }
