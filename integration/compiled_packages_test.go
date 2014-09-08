@@ -169,7 +169,7 @@ func (b blobReader) FileExists(fileName string) bool {
 }
 
 func (b blobReader) FileContents(fileName string) []byte {
-	session, err := bmtestutils.RunCommand("tar", "--to-stdout", "-xf", b.blobPath, path.Join(".", fileName))
+	session, err := bmtestutils.RunCommand("tar", "--to-stdout", "-xf", b.blobPath, fileName)
 	Expect(err).ToNot(HaveOccurred())
 	Expect(session.ExitCode()).To(Equal(0))
 	return session.Out.Contents()
