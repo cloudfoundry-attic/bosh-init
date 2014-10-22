@@ -19,7 +19,7 @@ echo "ENV"
 echo `env`
 
 cd $base
-vagrant up $@
+VAGRANT_LOG=debug vagrant up $@
 
 export BOSH_MICRO_VM_USERNAME=`vagrant ssh-config | grep "User " | awk '{print $2}'`
 export BOSH_MICRO_VM_IP=`vagrant ssh-config 2>/dev/null | grep HostName | awk '{print $2}'`
