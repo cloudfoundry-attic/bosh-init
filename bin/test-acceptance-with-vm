@@ -30,6 +30,9 @@ stemcell_url=${BOSH_MICRO_STEMCELL_URL:-https://s3.amazonaws.com/bosh-jenkins-ar
 echo "ENV"
 echo `env`
 
+echo "which sshpass:"
+which sshpass
+
 # Vagrant needs ubuntu to own the private key if aws provider
 if [ ! -z "$BOSH_LITE_PRIVATE_KEY" ]; then
   tmpfile=`mktemp -t bosh-micro-tests-XXXXXXXX`
