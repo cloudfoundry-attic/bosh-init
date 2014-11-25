@@ -241,6 +241,7 @@ func (f *factory) createDeployCmd() (Cmd, error) {
 		stemcellExtractor,
 		deploymentRecord,
 		deployer,
+		f.deploymentFile.UUID,
 		eventLogger,
 		f.logger,
 	), nil
