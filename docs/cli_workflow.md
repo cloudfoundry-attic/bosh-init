@@ -9,25 +9,33 @@ name: micro-bosh
 
 networks:
 - name: default
-  type: dynamic
+  type: manual
   cloud_properties:
-    subnet: AWS_SUBNET_NAME
+    subnet: subnet-12345
+    range: 10.10.0.40/30
+    reserved: [10.10.0.1-10.10.0.3]
+    static: [10.10.0.42]
 - name: vip
   type: vip
 
 resource_pools:
 - name: default
+  network: default
   cloud_properties:
     instance_type: AWS_INSTANCE_TYPE
     availability_zone: AWS_AVAILABILITY_ZONE
+  env:
+    bosh:
+      password: pjF0EjcwDTvyQ # openssl passwd -crypt sshpassword
 
 cloud_provider:
+  release: bosh-aws-cpi
   ssh_tunnel:
     host: MICRO_BOSH_IP
     port: 22
     user: ssh-user
     password: ssh-password
-  registry:
+  registry: &registry
     username: registry-user
     password: registry-password
     port: 6901
@@ -37,11 +45,7 @@ cloud_provider:
     blobstore:
       provider: local
       path: /var/vcap/micro_bosh/data/cache
-    registry:
-      username: admin
-      password: admin
-      port: 6901
-      host: localhost
+    registry: *registry
     ntp: [NTP_ADDRESS]
     aws:
       access_key_id: AWS_SECRET_KEY
@@ -55,15 +59,15 @@ cloud_provider:
 
 jobs:
 - name: bosh
+  instances: 1
   templates:
-  - name: nats
-  - name: redis
-  - name: postgres
-  - name: powerdns
-  - name: blobstore
-  - name: director
-  - name: health_monitor
-  - name: registry
+  - {name: nats, release: bosh}
+  - {name: redis, release: bosh}
+  - {name: postgres, release: bosh}
+  - {name: powerdns, release: bosh}
+  - {name: blobstore, release: bosh}
+  - {name: director, release: bosh}
+  - {name: health_monitor, release: bosh}
   networks:
   - name: default
   - name: vip
@@ -77,7 +81,9 @@ jobs:
     ...
 
 ```
-See [https://github.com/cloudfoundry/bosh/tree/master/release/jobs](https://github.com/cloudfoundry/bosh/tree/master/release/jobs) for defaults
+
+* See [https://github.com/cloudfoundry/bosh/tree/master/release/jobs](https://github.com/cloudfoundry/bosh/tree/master/release/jobs) for defaults
+* See [https://github.com/cloudfoundry/bosh-micro-cli/blob/master/acceptance/assets/manifest.yml](acceptance/assets/manifest.yml) for example that is used in acceptance tests.
 
 # Set deployment manifest
 
@@ -89,7 +95,7 @@ The command below sets the deployment manifest. The current deployment path is s
 
 The command below deploys Micro BOSH with the provided CPI release and stemcell.
 
-    bosh-micro deploy cpi-release.tgz stemcell.tgz
+    bosh-micro deploy stemcell.tgz cpi-release.tgz
 
 Once the deploy is finished, Micro BOSH will be available to be targeted.
 
