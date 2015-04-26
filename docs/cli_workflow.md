@@ -64,6 +64,7 @@ jobs:
   - name: director
   - name: health_monitor
   - name: registry
+  persistent_disk: 32768
   networks:
   - name: default
   - name: vip
