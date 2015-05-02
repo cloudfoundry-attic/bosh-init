@@ -25,4 +25,4 @@ To build the micro cli:
 
 Install tools used by the test suite:
 
-- `bin/go get code.google.com/p/go.tools/cmd/vet`
+- `bin/go get golang.org/x/tools/cmd/vet`
