@@ -152,7 +152,8 @@ func (c *agentClient) sendAsyncTaskMessage(method string, arguments []interface{
 	})
 
 	getTaskRetryStrategy := boshretry.NewUnlimitedRetryStrategy(c.getTaskDelay, getTaskRetryable, c.logger)
-	return value, getTaskRetryStrategy.Try()
+	err = getTaskRetryStrategy.Try()
+	return value, err
 }
 
 func (c *agentClient) CompilePackage(packageSource biagentclient.BlobRef, compiledPackageDependencies []biagentclient.BlobRef) (compiledPackageRef biagentclient.BlobRef, err error) {
