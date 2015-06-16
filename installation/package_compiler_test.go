@@ -6,9 +6,9 @@ import (
 
 	"github.com/cloudfoundry/bosh-init/installation"
 
-	"code.google.com/p/gomock/gomock"
 	"errors"
 	mock_state_job "github.com/cloudfoundry/bosh-init/state/job/mocks"
+	"github.com/golang/mock/gomock"
 
 	biinstallpkg "github.com/cloudfoundry/bosh-init/installation/pkg"
 	bireljob "github.com/cloudfoundry/bosh-init/release/job"

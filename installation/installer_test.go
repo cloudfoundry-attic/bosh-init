@@ -5,11 +5,11 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	"code.google.com/p/gomock/gomock"
 	mock_install_job "github.com/cloudfoundry/bosh-init/installation/job/mocks"
 	mock_install "github.com/cloudfoundry/bosh-init/installation/mocks"
 	mock_install_pkg "github.com/cloudfoundry/bosh-init/installation/pkg/mocks"
 	mock_registry "github.com/cloudfoundry/bosh-init/registry/mocks"
+	"github.com/golang/mock/gomock"
 
 	biinstalljob "github.com/cloudfoundry/bosh-init/installation/job"
 	biinstallmanifest "github.com/cloudfoundry/bosh-init/installation/manifest"

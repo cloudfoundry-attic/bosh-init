@@ -6,8 +6,8 @@ import (
 
 	"github.com/cloudfoundry/bosh-init/installation"
 
-	"code.google.com/p/gomock/gomock"
 	mock_template "github.com/cloudfoundry/bosh-init/templatescompiler/mocks"
+	"github.com/golang/mock/gomock"
 
 	biinstalljob "github.com/cloudfoundry/bosh-init/installation/job"
 	biinstallmanifest "github.com/cloudfoundry/bosh-init/installation/manifest"

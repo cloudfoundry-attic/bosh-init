@@ -1,9 +1,9 @@
 package pkg_test
 
 import (
-	"code.google.com/p/gomock/gomock"
 	mock_install_package "github.com/cloudfoundry/bosh-init/installation/pkg/mocks"
 	mock_state_package "github.com/cloudfoundry/bosh-init/state/pkg/mocks"
+	"github.com/golang/mock/gomock"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 

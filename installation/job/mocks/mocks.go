@@ -4,9 +4,9 @@
 package mocks
 
 import (
-	gomock "code.google.com/p/gomock/gomock"
 	job "github.com/cloudfoundry/bosh-init/installation/job"
 	ui "github.com/cloudfoundry/bosh-init/ui"
+	gomock "github.com/golang/mock/gomock"
 )
 
 // Mock of Installer interface
