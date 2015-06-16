@@ -22,18 +22,21 @@ type jobRenderer struct {
 }
 
 type RenderedJobRef struct {
-	Name        string
-	Version     string
-	BlobstoreID string
-	SHA1        string
+	Name    string
+	Version string
+	// BlobstoreID string
+	// SHA1        string
+	Path string
 }
 
-func NewRenderedJobRef(name, version, blobstoreID, sha1 string) RenderedJobRef {
+// func NewRenderedJobRef(name, version, blobstoreID, sha1 string) RenderedJobRef {
+func NewRenderedJobRef(name, version, path string) RenderedJobRef {
 	return RenderedJobRef{
-		Name:        name,
-		Version:     version,
-		BlobstoreID: blobstoreID,
-		SHA1:        sha1,
+		Name:    name,
+		Version: version,
+		// BlobstoreID: blobstoreID,
+		// SHA1:        sha1,
+		Path: path,
 	}
 }
 
@@ -103,19 +106,20 @@ func (b *jobRenderer) compressAndUpload(renderedJob bitemplate.RenderedJob) (Ren
 	if err != nil {
 		return RenderedJobRef{}, bosherr.WrapError(err, "Compressing rendered job templates")
 	}
-	defer b.compressor.CleanUp(tarballPath)
+	// defer b.compressor.CleanUp(tarballPath)
 
-	blobID, blobSHA1, err := b.blobstore.Create(tarballPath)
-	if err != nil {
-		return RenderedJobRef{}, bosherr.WrapError(err, "Creating blob")
-	}
+	// blobID, blobSHA1, err := b.blobstore.Create(tarballPath)
+	// if err != nil {
+	// 	return RenderedJobRef{}, bosherr.WrapError(err, "Creating blob")
+	// }
 
 	releaseJob := renderedJob.Job()
 
 	return RenderedJobRef{
-		Name:        releaseJob.Name,
-		Version:     releaseJob.Fingerprint,
-		BlobstoreID: blobID,
-		SHA1:        blobSHA1,
+		Name:    releaseJob.Name,
+		Version: releaseJob.Fingerprint,
+		// BlobstoreID: blobID,
+		// SHA1:        blobSHA1,
+		Path: tarballPath,
 	}, nil
 }

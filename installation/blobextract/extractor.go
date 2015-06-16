@@ -8,12 +8,17 @@ import (
 	boshcmd "github.com/cloudfoundry/bosh-utils/fileutil"
 	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 	boshsys "github.com/cloudfoundry/bosh-utils/system"
+
+	// boshinstall "github.com/cloudfoundry/bosh-init/installation"
 )
 
 //go:generate counterfeiter -o fakeblobextract/fake_extractor.go extractor.go Extractor
 type Extractor interface {
-	Extract(blobID, blobSHA1, targetDir string) error
-	Cleanup(blobID string, extractedBlobPath string) error
+	ExtractPkg(blobID, blobSHA1, targetDir string) error
+	// Extract(blobID, blobSHA1, targetDir string) error
+	Extract(renderedJobRef struct{ Name, Version, Path string }, targetDir string) error
+	// Cleanup(blobID string, extractedBlobPath string) error
+	Cleanup(extractedBlobPath string) error
 	ChmodExecutables(binPath string) error
 }
 
@@ -40,7 +45,7 @@ func NewExtractor(
 	}
 }
 
-func (e *extractor) Extract(blobID string, blobSHA1 string, targetDir string) error {
+func (e *extractor) ExtractPkg(blobID string, blobSHA1 string, targetDir string) error {
 	// Retrieve a temp copy of blob
 	filePath, err := e.blobstore.Get(blobID, blobSHA1)
 	if err != nil {
@@ -63,7 +68,40 @@ func (e *extractor) Extract(blobID string, blobSHA1 string, targetDir string) er
 			// Clean up extracted contents of blob
 			e.cleanUpFile(targetDir)
 		}
-		return bosherr.WrapErrorf(err, "Decompressing compiled package: BlobID: '%s', BlobSHA1: '%s'", blobID, blobSHA1)
+		return bosherr.WrapErrorf(err, "Decompressing compiled package:")
+	}
+	return nil
+}
+
+// func (e *extractor) Extract(blobID string, blobSHA1 string, targetDir string) error {
+func (e *extractor) Extract(renderedJobRef struct{ Name, Version, Path string }, targetDir string) error {
+	// Retrieve a temp copy of blob
+	// filePath, err := e.blobstore.Get(blobID, blobSHA1)
+	// if err != nil {
+	// 	return bosherr.WrapErrorf(err, "Getting object from blobstore: %s", blobID)
+	// }
+	// // Clean up temp copy of blob
+	// defer e.cleanUpBlob(filePath)
+
+	var err error
+
+	existed := e.fs.FileExists(targetDir)
+	if !existed {
+		err = e.fs.MkdirAll(targetDir, os.ModePerm)
+		if err != nil {
+			return bosherr.WrapErrorf(err, "Creating target dir: %s", targetDir)
+		}
+	}
+
+	filePath := renderedJobRef.Path
+
+	err = e.compressor.DecompressFileToDir(filePath, targetDir, boshcmd.CompressorOptions{})
+	if err != nil {
+		if !existed {
+			// Clean up extracted contents of blob
+			e.cleanUpFile(targetDir)
+		}
+		return bosherr.WrapErrorf(err, "Decompressing compiled package:")
 	}
 	return nil
 }
@@ -83,13 +121,14 @@ func (e *extractor) ChmodExecutables(binGlob string) error {
 	return nil
 }
 
-func (e *extractor) Cleanup(blobID string, decompressedBlobPath string) error {
+// func (e *extractor) Cleanup(blobID string, decompressedBlobPath string) error {
+func (e *extractor) Cleanup(decompressedBlobPath string) error {
 	e.cleanUpFile(decompressedBlobPath)
 
-	err := e.blobstore.Delete(blobID)
-	if err != nil {
-		return bosherr.WrapErrorf(err, "Deleting object from blobstore: %s", blobID)
-	}
+	// err := e.blobstore.Delete(blobID)
+	// if err != nil {
+	// 	return bosherr.WrapErrorf(err, "Deleting object from blobstore: %s", blobID)
+	// }
 	return nil
 }
 

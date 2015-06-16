@@ -134,7 +134,7 @@ func (c *compiler) installPackages(packages []*birelpkg.Package) error {
 
 		c.logger.Debug(c.logTag, "Installing package '%s/%s'", pkg.Name, pkg.Fingerprint)
 
-		err = c.blobExtractor.Extract(record.BlobID, record.BlobSHA1, filepath.Join(c.packagesDir, pkg.Name))
+		err = c.blobExtractor.ExtractPkg(record.BlobID, record.BlobSHA1, filepath.Join(c.packagesDir, pkg.Name))
 		if err != nil {
 			return bosherr.WrapErrorf(err, "Installing package '%s' into '%s'", pkg.Name, c.packagesDir)
 		}

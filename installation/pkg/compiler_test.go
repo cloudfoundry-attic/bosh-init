@@ -158,12 +158,12 @@ var _ = Describe("PackageCompiler", func() {
 			_, err := compiler.Compile(pkg)
 			Expect(err).ToNot(HaveOccurred())
 
-			blobstoreID, sha1, jobPath := fakeExtractor.ExtractArgsForCall(0)
+			blobstoreID, sha1, jobPath := fakeExtractor.ExtractPkgArgsForCall(0)
 			Expect(blobstoreID).To(Equal(dep1.BlobID))
 			Expect(sha1).To(Equal(dep1.BlobSHA1))
 			Expect(jobPath).To(Equal(filepath.Join(packagesDir, "fake-package-name-dependency-1")))
 
-			blobstoreID, sha1, jobPath = fakeExtractor.ExtractArgsForCall(1)
+			blobstoreID, sha1, jobPath = fakeExtractor.ExtractPkgArgsForCall(1)
 			Expect(blobstoreID).To(Equal(dep2.BlobID))
 			Expect(sha1).To(Equal(dep2.BlobSHA1))
 			Expect(jobPath).To(Equal(filepath.Join(packagesDir, "fake-package-name-dependency-2")))
@@ -232,7 +232,7 @@ var _ = Describe("PackageCompiler", func() {
 
 		Context("when dependency installation fails", func() {
 			JustBeforeEach(func() {
-				fakeExtractor.ExtractReturns(errors.New("fake-install-error"))
+				fakeExtractor.ExtractPkgReturns(errors.New("fake-install-error"))
 			})
 
 			It("returns an error", func() {

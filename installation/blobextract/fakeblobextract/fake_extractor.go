@@ -8,20 +8,28 @@ import (
 )
 
 type FakeExtractor struct {
-	ExtractStub        func(blobID, blobSHA1, targetDir string) error
-	extractMutex       sync.RWMutex
-	extractArgsForCall []struct {
+	ExtractPkgStub        func(blobID, blobSHA1, targetDir string) error
+	extractPkgMutex       sync.RWMutex
+	extractPkgArgsForCall []struct {
 		blobID    string
 		blobSHA1  string
 		targetDir string
 	}
+	extractPkgReturns struct {
+		result1 error
+	}
+	ExtractStub        func(renderedJobRef struct{ Name, Version, Path string }, targetDir string) error
+	extractMutex       sync.RWMutex
+	extractArgsForCall []struct {
+		renderedJobRef struct{ Name, Version, Path string }
+		targetDir      string
+	}
 	extractReturns struct {
 		result1 error
 	}
-	CleanupStub        func(blobID string, extractedBlobPath string) error
+	CleanupStub        func(extractedBlobPath string) error
 	cleanupMutex       sync.RWMutex
 	cleanupArgsForCall []struct {
-		blobID            string
 		extractedBlobPath string
 	}
 	cleanupReturns struct {
@@ -37,16 +45,49 @@ type FakeExtractor struct {
 	}
 }
 
-func (fake *FakeExtractor) Extract(blobID string, blobSHA1 string, targetDir string) error {
-	fake.extractMutex.Lock()
-	fake.extractArgsForCall = append(fake.extractArgsForCall, struct {
+func (fake *FakeExtractor) ExtractPkg(blobID string, blobSHA1 string, targetDir string) error {
+	fake.extractPkgMutex.Lock()
+	fake.extractPkgArgsForCall = append(fake.extractPkgArgsForCall, struct {
 		blobID    string
 		blobSHA1  string
 		targetDir string
 	}{blobID, blobSHA1, targetDir})
+	fake.extractPkgMutex.Unlock()
+	if fake.ExtractPkgStub != nil {
+		return fake.ExtractPkgStub(blobID, blobSHA1, targetDir)
+	} else {
+		return fake.extractPkgReturns.result1
+	}
+}
+
+func (fake *FakeExtractor) ExtractPkgCallCount() int {
+	fake.extractPkgMutex.RLock()
+	defer fake.extractPkgMutex.RUnlock()
+	return len(fake.extractPkgArgsForCall)
+}
+
+func (fake *FakeExtractor) ExtractPkgArgsForCall(i int) (string, string, string) {
+	fake.extractPkgMutex.RLock()
+	defer fake.extractPkgMutex.RUnlock()
+	return fake.extractPkgArgsForCall[i].blobID, fake.extractPkgArgsForCall[i].blobSHA1, fake.extractPkgArgsForCall[i].targetDir
+}
+
+func (fake *FakeExtractor) ExtractPkgReturns(result1 error) {
+	fake.ExtractPkgStub = nil
+	fake.extractPkgReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeExtractor) Extract(renderedJobRef struct{ Name, Version, Path string }, targetDir string) error {
+	fake.extractMutex.Lock()
+	fake.extractArgsForCall = append(fake.extractArgsForCall, struct {
+		renderedJobRef struct{ Name, Version, Path string }
+		targetDir      string
+	}{renderedJobRef, targetDir})
 	fake.extractMutex.Unlock()
 	if fake.ExtractStub != nil {
-		return fake.ExtractStub(blobID, blobSHA1, targetDir)
+		return fake.ExtractStub(renderedJobRef, targetDir)
 	} else {
 		return fake.extractReturns.result1
 	}
@@ -58,10 +99,10 @@ func (fake *FakeExtractor) ExtractCallCount() int {
 	return len(fake.extractArgsForCall)
 }
 
-func (fake *FakeExtractor) ExtractArgsForCall(i int) (string, string, string) {
+func (fake *FakeExtractor) ExtractArgsForCall(i int) (struct{ Name, Version, Path string }, string) {
 	fake.extractMutex.RLock()
 	defer fake.extractMutex.RUnlock()
-	return fake.extractArgsForCall[i].blobID, fake.extractArgsForCall[i].blobSHA1, fake.extractArgsForCall[i].targetDir
+	return fake.extractArgsForCall[i].renderedJobRef, fake.extractArgsForCall[i].targetDir
 }
 
 func (fake *FakeExtractor) ExtractReturns(result1 error) {
@@ -71,15 +112,14 @@ func (fake *FakeExtractor) ExtractReturns(result1 error) {
 	}{result1}
 }
 
-func (fake *FakeExtractor) Cleanup(blobID string, extractedBlobPath string) error {
+func (fake *FakeExtractor) Cleanup(extractedBlobPath string) error {
 	fake.cleanupMutex.Lock()
 	fake.cleanupArgsForCall = append(fake.cleanupArgsForCall, struct {
-		blobID            string
 		extractedBlobPath string
-	}{blobID, extractedBlobPath})
+	}{extractedBlobPath})
 	fake.cleanupMutex.Unlock()
 	if fake.CleanupStub != nil {
-		return fake.CleanupStub(blobID, extractedBlobPath)
+		return fake.CleanupStub(extractedBlobPath)
 	} else {
 		return fake.cleanupReturns.result1
 	}
@@ -91,10 +131,10 @@ func (fake *FakeExtractor) CleanupCallCount() int {
 	return len(fake.cleanupArgsForCall)
 }
 
-func (fake *FakeExtractor) CleanupArgsForCall(i int) (string, string) {
+func (fake *FakeExtractor) CleanupArgsForCall(i int) string {
 	fake.cleanupMutex.RLock()
 	defer fake.cleanupMutex.RUnlock()
-	return fake.cleanupArgsForCall[i].blobID, fake.cleanupArgsForCall[i].extractedBlobPath
+	return fake.cleanupArgsForCall[i].extractedBlobPath
 }
 
 func (fake *FakeExtractor) CleanupReturns(result1 error) {

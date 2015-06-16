@@ -100,12 +100,13 @@ func (i *installer) Install(manifest biinstallmanifest.Manifest, stage biui.Stag
 
 func (i *installer) Cleanup(installation Installation) error {
 	job := installation.Job()
-	return i.blobExtractor.Cleanup(job.BlobstoreID, job.Path)
+	// return i.blobExtractor.Cleanup(job.BlobstoreID, job.Path)
+	return i.blobExtractor.Cleanup(job.Path)
 }
 
 func (i *installer) installPackages(compiledPackages []CompiledPackageRef) error {
 	for _, pkg := range compiledPackages {
-		err := i.blobExtractor.Extract(pkg.BlobstoreID, pkg.SHA1, filepath.Join(i.packagesPath, pkg.Name))
+		err := i.blobExtractor.ExtractPkg(pkg.BlobstoreID, pkg.SHA1, filepath.Join(i.packagesPath, pkg.Name))
 		if err != nil {
 			return bosherr.WrapErrorf(err, "Installing package '%s'", pkg.Name)
 		}
@@ -118,10 +119,16 @@ func (i *installer) installJob(renderedJobRef RenderedJobRef, stage biui.Stage) 
 		var stageErr error
 		jobDir := filepath.Join(i.target.JobsPath(), renderedJobRef.Name)
 
-		stageErr = i.blobExtractor.Extract(renderedJobRef.BlobstoreID, renderedJobRef.SHA1, jobDir)
+		// stageErr = i.blobExtractor.Extract(renderedJobRef.BlobstoreID, renderedJobRef.SHA1, jobDir)
+		// if stageErr != nil {
+		// 	return bosherr.WrapErrorf(stageErr, "Extracting blob with ID '%s'", renderedJobRef.BlobstoreID)
+		// }
+		stageErr = i.blobExtractor.Extract(renderedJobRef, jobDir)
 		if stageErr != nil {
-			return bosherr.WrapErrorf(stageErr, "Extracting blob with ID '%s'", renderedJobRef.BlobstoreID)
+			return bosherr.WrapErrorf(stageErr, "Extracting blob")
 		}
+
+		// err = b.fs.CopyFile(filepath.Join(b.path(), blobID), fileName)
 
 		stageErr = i.blobExtractor.ChmodExecutables(path.Join(jobDir, "bin", "*"))
 		if stageErr != nil {

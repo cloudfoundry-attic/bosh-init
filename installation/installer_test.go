@@ -62,7 +62,8 @@ var _ = Describe("Installer", func() {
 			Name:       "fake-installation-name",
 			Properties: biproperty.Map{},
 		}
-		renderedCPIJob := NewRenderedJobRef("cpi", "fake-release-job-fingerprint", "fake-rendered-job-blobstore-id", "fake-rendered-job-blobstore-id")
+		// renderedCPIJob := NewRenderedJobRef("cpi", "fake-release-job-fingerprint", "fake-rendered-job-blobstore-id", "fake-rendered-job-blobstore-id")
+		renderedCPIJob := NewRenderedJobRef("cpi", "fake-release-job-fingerprint", "fake-rendered-job-path")
 		installedJob = NewInstalledJob(renderedCPIJob, "/extracted-release-path/cpi")
 	})
 
@@ -143,8 +144,9 @@ var _ = Describe("Installer", func() {
 
 			Expect(fakeExtractor.CleanupCallCount()).To(Equal(1))
 
-			blobstoreID, extractedBlobPath := fakeExtractor.CleanupArgsForCall(0)
-			Expect(blobstoreID).To(Equal(installedJob.BlobstoreID))
+			// blobstoreID, extractedBlobPath := fakeExtractor.CleanupArgsForCall(0)
+			extractedBlobPath := fakeExtractor.CleanupArgsForCall(0)
+			// Expect(blobstoreID).To(Equal(installedJob.BlobstoreID))
 			Expect(extractedBlobPath).To(Equal(installedJob.Path))
 		})
 
