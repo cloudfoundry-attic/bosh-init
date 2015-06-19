@@ -7,8 +7,8 @@ import (
 
 	birelmanifest "github.com/cloudfoundry/bosh-init/release/manifest"
 	birelsetmanifest "github.com/cloudfoundry/bosh-init/release/set/manifest"
-	boshlog "github.com/cloudfoundry/bosh-utils/logger"
-	biproperty "github.com/cloudfoundry/bosh-utils/property"
+	boshlog "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/logger"
+	biproperty "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/property"
 )
 
 var _ = Describe("Validator", func() {

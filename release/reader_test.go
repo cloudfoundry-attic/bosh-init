@@ -9,8 +9,8 @@ import (
 
 	bireljob "github.com/cloudfoundry/bosh-init/release/job"
 	birelpkg "github.com/cloudfoundry/bosh-init/release/pkg"
-	fakecmd "github.com/cloudfoundry/bosh-utils/fileutil/fakes"
-	fakesys "github.com/cloudfoundry/bosh-utils/system/fakes"
+	fakecmd "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/fileutil/fakes"
+	fakesys "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/system/fakes"
 )
 
 var _ = Describe("tarReader", func() {

@@ -9,7 +9,7 @@ import (
 	"github.com/cloudfoundry/bosh-init/release"
 	fakebirel "github.com/cloudfoundry/bosh-init/release/fakes"
 	bistemcell "github.com/cloudfoundry/bosh-init/stemcell"
-	fakesys "github.com/cloudfoundry/bosh-utils/system/fakes"
+	fakesys "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/system/fakes"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 

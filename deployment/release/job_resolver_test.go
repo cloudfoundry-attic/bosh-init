@@ -6,7 +6,7 @@ import (
 	. "github.com/onsi/gomega"
 
 	bireljob "github.com/cloudfoundry/bosh-init/release/job"
-	"github.com/golang/mock/gomock"
+	"github.com/cloudfoundry/bosh-init/internal/github.com/golang/mock/gomock"
 
 	fake_release "github.com/cloudfoundry/bosh-init/release/fakes"
 	mock_release "github.com/cloudfoundry/bosh-init/release/mocks"

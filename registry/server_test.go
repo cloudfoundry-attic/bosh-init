@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	. "github.com/cloudfoundry/bosh-init/registry"
-	boshlog "github.com/cloudfoundry/bosh-utils/logger"
+	boshlog "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/logger"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )

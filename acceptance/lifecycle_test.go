@@ -13,8 +13,8 @@ import (
 	. "github.com/onsi/gomega"
 
 	bitestutils "github.com/cloudfoundry/bosh-init/testutils"
-	boshlog "github.com/cloudfoundry/bosh-utils/logger"
-	boshsys "github.com/cloudfoundry/bosh-utils/system"
+	boshlog "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/logger"
+	boshsys "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/system"
 )
 
 const (

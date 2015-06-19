@@ -4,7 +4,7 @@ import (
 	"time"
 
 	biuifmt "github.com/cloudfoundry/bosh-init/ui/fmt"
-	boshlog "github.com/cloudfoundry/bosh-utils/logger"
+	boshlog "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/logger"
 	"github.com/pivotal-golang/clock"
 )
 

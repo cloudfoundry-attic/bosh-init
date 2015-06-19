@@ -6,10 +6,10 @@ import (
 	. "github.com/onsi/gomega"
 
 	biui "github.com/cloudfoundry/bosh-init/ui"
-	boshlog "github.com/cloudfoundry/bosh-utils/logger"
-	boshsys "github.com/cloudfoundry/bosh-utils/system"
-	fakesys "github.com/cloudfoundry/bosh-utils/system/fakes"
-	fakeuuid "github.com/cloudfoundry/bosh-utils/uuid/fakes"
+	boshlog "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/logger"
+	boshsys "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/system"
+	fakesys "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/system/fakes"
+	fakeuuid "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/uuid/fakes"
 	"github.com/pivotal-golang/clock"
 
 	fakebiui "github.com/cloudfoundry/bosh-init/ui/fakes"

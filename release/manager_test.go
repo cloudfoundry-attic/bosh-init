@@ -6,7 +6,7 @@ import (
 	. "github.com/onsi/gomega"
 
 	fake_release "github.com/cloudfoundry/bosh-init/release/fakes"
-	boshlog "github.com/cloudfoundry/bosh-utils/logger"
+	boshlog "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/logger"
 )
 
 var _ = Describe("Manager", func() {
