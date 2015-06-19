@@ -5,13 +5,13 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	mock_state_package "github.com/cloudfoundry/bosh-init/state/pkg/mocks"
 	"github.com/cloudfoundry/bosh-init/internal/github.com/golang/mock/gomock"
+	mock_state_package "github.com/cloudfoundry/bosh-init/state/pkg/mocks"
 
+	boshlog "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/logger"
 	bireljob "github.com/cloudfoundry/bosh-init/release/job"
 	birelpkg "github.com/cloudfoundry/bosh-init/release/pkg"
 	bistatepkg "github.com/cloudfoundry/bosh-init/state/pkg"
-	boshlog "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/logger"
 
 	fakebiui "github.com/cloudfoundry/bosh-init/ui/fakes"
 )

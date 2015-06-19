@@ -6,12 +6,12 @@ import (
 	"io/ioutil"
 	"os"
 
-	bireljob "github.com/cloudfoundry/bosh-init/release/job"
-	. "github.com/cloudfoundry/bosh-init/templatescompiler"
-	"github.com/cloudfoundry/bosh-init/templatescompiler/erbrenderer"
 	boshlog "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/logger"
 	biproperty "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/property"
 	boshsys "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/system"
+	bireljob "github.com/cloudfoundry/bosh-init/release/job"
+	. "github.com/cloudfoundry/bosh-init/templatescompiler"
+	"github.com/cloudfoundry/bosh-init/templatescompiler/erbrenderer"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )

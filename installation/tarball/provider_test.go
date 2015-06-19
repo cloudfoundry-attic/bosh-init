@@ -7,10 +7,10 @@ import (
 
 	fakebicrypto "github.com/cloudfoundry/bosh-init/crypto/fakes"
 	. "github.com/cloudfoundry/bosh-init/installation/tarball"
-	fakebiui "github.com/cloudfoundry/bosh-init/ui/fakes"
 	fakebihttpclient "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/httpclient/fakes"
 	boshlog "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/logger"
 	fakesys "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/system/fakes"
+	fakebiui "github.com/cloudfoundry/bosh-init/ui/fakes"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )

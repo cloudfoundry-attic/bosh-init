@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	. "gopkg.in/check.v1"
 	"github.com/cloudfoundry/bosh-init/internal/gopkg.in/yaml.v2"
+	. "gopkg.in/check.v1"
 	"net"
 	"os"
 )

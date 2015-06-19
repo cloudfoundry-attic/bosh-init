@@ -7,11 +7,11 @@ import (
 	. "github.com/cloudfoundry/bosh-init/installation"
 
 	biinstallmanifest "github.com/cloudfoundry/bosh-init/installation/manifest"
+	boshlog "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/logger"
+	"github.com/cloudfoundry/bosh-init/internal/github.com/golang/mock/gomock"
 	mock_registry "github.com/cloudfoundry/bosh-init/registry/mocks"
 	test_support_mocks "github.com/cloudfoundry/bosh-init/test_support/mocks"
 	fakebiui "github.com/cloudfoundry/bosh-init/ui/fakes"
-	boshlog "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/logger"
-	"github.com/cloudfoundry/bosh-init/internal/github.com/golang/mock/gomock"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"

@@ -3,8 +3,8 @@ package ui
 import (
 	"time"
 
-	biuifmt "github.com/cloudfoundry/bosh-init/ui/fmt"
 	boshlog "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/logger"
+	biuifmt "github.com/cloudfoundry/bosh-init/ui/fmt"
 	"github.com/pivotal-golang/clock"
 )
 
