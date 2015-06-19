@@ -1,8 +1,8 @@
 package gbytes_test
 
 import (
-	"time"
 	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega/gbytes"
+	"time"
 
 	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/ginkgo"
 	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega"

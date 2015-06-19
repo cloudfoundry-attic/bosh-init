@@ -11,10 +11,10 @@ import (
 	"github.com/cloudfoundry/bosh-init/internal/github.com/golang/mock/gomock"
 	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/ginkgo"
 	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega"
+	"github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega/gbytes"
 	mock_registry "github.com/cloudfoundry/bosh-init/registry/mocks"
 	test_support_mocks "github.com/cloudfoundry/bosh-init/test_support/mocks"
 	fakebiui "github.com/cloudfoundry/bosh-init/ui/fakes"
-	"github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega/gbytes"
 )
 
 var _ = Describe("Installation", func() {

@@ -1,9 +1,9 @@
 package matchers_test
 
 import (
-	"testing"
 	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/ginkgo"
 	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega"
+	"testing"
 )
 
 type myStringer struct {
