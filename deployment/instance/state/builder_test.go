@@ -6,10 +6,10 @@ import (
 	mock_blobstore "github.com/cloudfoundry/bosh-init/blobstore/mocks"
 	mock_deployment_release "github.com/cloudfoundry/bosh-init/deployment/release/mocks"
 	"github.com/cloudfoundry/bosh-init/internal/github.com/golang/mock/gomock"
+	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/ginkgo"
+	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega"
 	mock_state_job "github.com/cloudfoundry/bosh-init/state/job/mocks"
 	mock_template "github.com/cloudfoundry/bosh-init/templatescompiler/mocks"
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
 
 	bideplmanifest "github.com/cloudfoundry/bosh-init/deployment/manifest"
 	bias "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-agent/agentclient/applyspec"

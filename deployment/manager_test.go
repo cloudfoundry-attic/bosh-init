@@ -11,9 +11,9 @@ import (
 	mock_deployment "github.com/cloudfoundry/bosh-init/deployment/mocks"
 	mock_agentclient "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-agent/agentclient/mocks"
 	"github.com/cloudfoundry/bosh-init/internal/github.com/golang/mock/gomock"
+	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/ginkgo"
+	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega"
 	mock_stemcell "github.com/cloudfoundry/bosh-init/stemcell/mocks"
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
 
 	bicloud "github.com/cloudfoundry/bosh-init/cloud"
 	biconfig "github.com/cloudfoundry/bosh-init/config"

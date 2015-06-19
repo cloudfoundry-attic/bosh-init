@@ -2,8 +2,8 @@ package config_test
 
 import (
 	. "github.com/cloudfoundry/bosh-init/config"
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
+	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/ginkgo"
+	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega"
 
 	//	"encoding/json"
 	//	"errors"

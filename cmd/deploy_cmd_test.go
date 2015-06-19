@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 
 	bicmd "github.com/cloudfoundry/bosh-init/cmd"
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
+	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/ginkgo"
+	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega"
 
 	"github.com/cloudfoundry/bosh-init/internal/github.com/golang/mock/gomock"
 

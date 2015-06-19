@@ -4,8 +4,8 @@ import (
 	. "github.com/cloudfoundry/bosh-init/templatescompiler"
 
 	"bytes"
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
+	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/ginkgo"
+	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega"
 	"os"
 	"path/filepath"
 

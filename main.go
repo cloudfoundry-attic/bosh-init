@@ -11,7 +11,7 @@ import (
 	boshlogfile "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/logger/file"
 	boshsys "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/system"
 	boshuuid "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/uuid"
-	"github.com/pivotal-golang/clock"
+	"github.com/cloudfoundry/bosh-init/internal/github.com/pivotal-golang/clock"
 
 	bilog "github.com/cloudfoundry/bosh-init/logger"
 	biui "github.com/cloudfoundry/bosh-init/ui"

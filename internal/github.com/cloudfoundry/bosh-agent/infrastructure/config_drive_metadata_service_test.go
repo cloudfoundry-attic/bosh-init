@@ -5,8 +5,8 @@ import (
 	"errors"
 	"fmt"
 
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
+	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/ginkgo"
+	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega"
 
 	fakeinf "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-agent/infrastructure/fakes"
 	fakeplatform "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-agent/platform/fakes"

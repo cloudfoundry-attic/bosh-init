@@ -11,7 +11,7 @@ import (
 	"sync"
 	"syscall"
 
-	. "github.com/onsi/gomega"
+	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
 )
 

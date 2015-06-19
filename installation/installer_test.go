@@ -4,8 +4,8 @@ import (
 	"errors"
 
 	. "github.com/cloudfoundry/bosh-init/installation"
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
+	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/ginkgo"
+	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega"
 
 	"github.com/cloudfoundry/bosh-init/installation/blobextract/fakeblobextract"
 	mock_install "github.com/cloudfoundry/bosh-init/installation/mocks"

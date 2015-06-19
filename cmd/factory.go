@@ -28,6 +28,7 @@ import (
 	boshlog "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/logger"
 	boshsys "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/system"
 	boshuuid "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/uuid"
+	"github.com/cloudfoundry/bosh-init/internal/github.com/pivotal-golang/clock"
 	biregistry "github.com/cloudfoundry/bosh-init/registry"
 	birel "github.com/cloudfoundry/bosh-init/release"
 	birelsetmanifest "github.com/cloudfoundry/bosh-init/release/set/manifest"
@@ -36,7 +37,6 @@ import (
 	bitemplate "github.com/cloudfoundry/bosh-init/templatescompiler"
 	bitemplateerb "github.com/cloudfoundry/bosh-init/templatescompiler/erbrenderer"
 	biui "github.com/cloudfoundry/bosh-init/ui"
-	"github.com/pivotal-golang/clock"
 )
 
 type Factory interface {

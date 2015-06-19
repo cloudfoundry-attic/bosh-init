@@ -429,6 +429,13 @@
 			"revisionTime": "2015-06-12T10:25:59-07:00"
 		},
 		{
+			"canonical": "github.com/mitchellh/mapstructure",
+			"comment": "",
+			"local": "github.com/cloudfoundry/bosh-init/internal/github.com/mitchellh/mapstructure",
+			"revision": "2caf8efc93669b6c43e0441cdc6aed17546c96f3",
+			"revisionTime": "2015-06-13T17:36:06-04:00"
+		},
+		{
 			"canonical": "github.com/cloudfoundry/bosh-utils/internal/github.com/nu7hatch/gouuid",
 			"comment": "",
 			"local": "github.com/cloudfoundry/bosh-init/internal/github.com/nu7hatch/gouuid",
@@ -441,6 +448,13 @@
 			"local": "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/ginkgo",
 			"revision": "6c266c2d546fc0dfec0f3c2b0728f87b06fcd25e",
 			"revisionTime": "2015-06-17T09:50:28-07:00"
+		},
+		{
+			"canonical": "github.com/onsi/ginkgo",
+			"comment": "",
+			"local": "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/ginkgo",
+			"revision": "17887ab74bd63a97cfd17bf21c74b80f92787cdc",
+			"revisionTime": "2015-06-10T12:43:53-07:00"
 		},
 		{
 			"canonical": "github.com/cloudfoundry/bosh-utils/internal/github.com/onsi/ginkgo/config",
@@ -548,6 +562,13 @@
 			"revisionTime": "2015-06-17T09:50:28-07:00"
 		},
 		{
+			"canonical": "github.com/onsi/gomega",
+			"comment": "",
+			"local": "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega",
+			"revision": "d6c945f9fdbf6cad99e85b0feff591caa268e0db",
+			"revisionTime": "2015-05-30T14:13:11-07:00"
+		},
+		{
 			"canonical": "github.com/cloudfoundry/bosh-utils/internal/github.com/onsi/gomega/format",
 			"comment": "",
 			"local": "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega/format",
@@ -565,8 +586,8 @@
 			"canonical": "github.com/onsi/gomega/gexec",
 			"comment": "",
 			"local": "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega/gexec",
-			"revision": "f4f1caefe95e396ea97b72dd6c52973ae4a6978c",
-			"revisionTime": "2015-04-30T07:36:41-07:00"
+			"revision": "d6c945f9fdbf6cad99e85b0feff591caa268e0db",
+			"revisionTime": "2015-05-30T14:13:11-07:00"
 		},
 		{
 			"canonical": "github.com/cloudfoundry/bosh-utils/internal/github.com/onsi/gomega/ghttp",
@@ -653,11 +674,25 @@
 			"revisionTime": "2015-06-17T09:50:28-07:00"
 		},
 		{
+			"canonical": "github.com/pivotal-golang/clock",
+			"comment": "",
+			"local": "github.com/cloudfoundry/bosh-init/internal/github.com/pivotal-golang/clock",
+			"revision": "270608bba0223b4ee5e0ac06f85e7964378f57a3",
+			"revisionTime": "2015-04-28T13:57:09-07:00"
+		},
+		{
 			"canonical": "github.com/cloudfoundry/bosh-utils/internal/github.com/pivotal-golang/clock/fakeclock",
 			"comment": "",
 			"local": "github.com/cloudfoundry/bosh-init/internal/github.com/pivotal-golang/clock/fakeclock",
 			"revision": "6c266c2d546fc0dfec0f3c2b0728f87b06fcd25e",
 			"revisionTime": "2015-06-17T09:50:28-07:00"
+		},
+		{
+			"canonical": "github.com/pivotal-golang/clock/fakeclock",
+			"comment": "",
+			"local": "github.com/cloudfoundry/bosh-init/internal/github.com/pivotal-golang/clock/fakeclock",
+			"revision": "270608bba0223b4ee5e0ac06f85e7964378f57a3",
+			"revisionTime": "2015-04-28T13:57:09-07:00"
 		},
 		{
 			"canonical": "github.com/cloudfoundry/bosh-utils/internal/github.com/stretchr/testify/assert",

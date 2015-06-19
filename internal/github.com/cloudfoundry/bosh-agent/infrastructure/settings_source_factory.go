@@ -3,7 +3,7 @@ package infrastructure
 import (
 	"encoding/json"
 
-	mapstruc "github.com/mitchellh/mapstructure"
+	mapstruc "github.com/cloudfoundry/bosh-init/internal/github.com/mitchellh/mapstructure"
 
 	boshplat "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-agent/platform"
 	boshsettings "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-agent/settings"

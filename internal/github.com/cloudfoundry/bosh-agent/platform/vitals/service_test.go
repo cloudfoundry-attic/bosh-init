@@ -3,8 +3,8 @@ package vitals_test
 import (
 	"time"
 
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
+	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/ginkgo"
+	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega"
 
 	boshstats "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-agent/platform/stats"
 	fakestats "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-agent/platform/stats/fakes"

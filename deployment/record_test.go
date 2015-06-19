@@ -7,11 +7,11 @@ import (
 	fakebiconfig "github.com/cloudfoundry/bosh-init/config/fakes"
 	fakebicrypto "github.com/cloudfoundry/bosh-init/crypto/fakes"
 	fakesys "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/system/fakes"
+	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/ginkgo"
+	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega"
 	"github.com/cloudfoundry/bosh-init/release"
 	fakebirel "github.com/cloudfoundry/bosh-init/release/fakes"
 	bistemcell "github.com/cloudfoundry/bosh-init/stemcell"
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
 
 	. "github.com/cloudfoundry/bosh-init/deployment"
 )

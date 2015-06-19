@@ -4,8 +4,8 @@ import (
 	. "github.com/cloudfoundry/bosh-init/deployment/instance"
 
 	"errors"
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
+	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/ginkgo"
+	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega"
 	"time"
 
 	mock_blobstore "github.com/cloudfoundry/bosh-init/blobstore/mocks"

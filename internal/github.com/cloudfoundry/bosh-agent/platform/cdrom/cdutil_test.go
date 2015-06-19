@@ -1,8 +1,8 @@
 package cdrom_test
 
 import (
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
+	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/ginkgo"
+	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega"
 
 	boshcdrom "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-agent/platform/cdrom"
 	fakecdrom "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-agent/platform/cdrom/fakes"

@@ -8,8 +8,8 @@ import (
 	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega/gexec"
 	. "github.com/onsi/gomega/gbytes"
 
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
+	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/ginkgo"
+	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega"
 )
 
 var _ = Describe("Session", func() {

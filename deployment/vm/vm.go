@@ -13,8 +13,8 @@ import (
 	boshlog "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/logger"
 	boshretry "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/retrystrategy"
 	boshsys "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/system"
+	"github.com/cloudfoundry/bosh-init/internal/github.com/pivotal-golang/clock"
 	biui "github.com/cloudfoundry/bosh-init/ui"
-	"github.com/pivotal-golang/clock"
 )
 
 type VM interface {
