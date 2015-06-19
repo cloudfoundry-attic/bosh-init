@@ -7,7 +7,7 @@ import (
 	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega"
 	. "github.com/cloudfoundry/bosh-init/release/pkg"
 
-	gomegafmt "github.com/onsi/gomega/format"
+	gomegafmt "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega/format"
 )
 
 var _ = Describe("Sort", func() {

@@ -14,7 +14,7 @@ import (
 	mock_registry "github.com/cloudfoundry/bosh-init/registry/mocks"
 	test_support_mocks "github.com/cloudfoundry/bosh-init/test_support/mocks"
 	fakebiui "github.com/cloudfoundry/bosh-init/ui/fakes"
-	"github.com/onsi/gomega/gbytes"
+	"github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega/gbytes"
 )
 
 var _ = Describe("Installation", func() {

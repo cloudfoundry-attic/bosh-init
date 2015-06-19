@@ -11,7 +11,7 @@ import (
 	"github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/logger"
 	"github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/system"
 	"github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/system/fakes"
-	"github.com/onsi/gomega/gbytes"
+	"github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega/gbytes"
 )
 
 var _ = Describe("Uninstaller", func() {

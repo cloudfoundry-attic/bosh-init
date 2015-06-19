@@ -5,7 +5,7 @@ import (
 
 	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/ginkgo"
 	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega"
-	"github.com/onsi/gomega/gbytes"
+	"github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega/gbytes"
 
 	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/ginkgo/internal/spec"
 

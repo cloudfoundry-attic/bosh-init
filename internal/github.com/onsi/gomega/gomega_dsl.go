@@ -18,10 +18,10 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/onsi/gomega/internal/assertion"
-	"github.com/onsi/gomega/internal/asyncassertion"
-	"github.com/onsi/gomega/internal/testingtsupport"
-	"github.com/onsi/gomega/types"
+	"github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega/internal/assertion"
+	"github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega/internal/asyncassertion"
+	"github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega/internal/testingtsupport"
+	"github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega/types"
 )
 
 const GOMEGA_VERSION = "1.0"

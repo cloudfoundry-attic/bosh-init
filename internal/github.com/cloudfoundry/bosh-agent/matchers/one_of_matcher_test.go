@@ -8,7 +8,7 @@ import (
 
 	"fmt"
 
-	"github.com/onsi/gomega/internal/fakematcher"
+	"github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega/internal/fakematcher"
 )
 
 var _ = Describe("matchers", func() {

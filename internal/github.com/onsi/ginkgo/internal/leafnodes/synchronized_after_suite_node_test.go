@@ -7,7 +7,7 @@ import (
 	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega"
 	"sync"
 
-	"github.com/onsi/gomega/ghttp"
+	"github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega/ghttp"
 	"net/http"
 
 	"github.com/cloudfoundry/bosh-init/internal/github.com/onsi/ginkgo/internal/codelocation"

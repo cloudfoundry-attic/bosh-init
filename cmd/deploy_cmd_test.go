@@ -55,7 +55,7 @@ import (
 	fakebirelsetmanifest "github.com/cloudfoundry/bosh-init/release/set/manifest/fakes"
 	fakebistemcell "github.com/cloudfoundry/bosh-init/stemcell/fakes"
 	fakebiui "github.com/cloudfoundry/bosh-init/ui/fakes"
-	"github.com/onsi/gomega/gbytes"
+	"github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega/gbytes"
 )
 
 var _ = Describe("DeployCmd", rootDesc)
