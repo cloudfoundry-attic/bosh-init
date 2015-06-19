@@ -1,4 +1,4 @@
-package fakeclock_test
+package specrunner_test
 
 import (
 	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/ginkgo"
@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestFakeClock(t *testing.T) {
+func TestSpecRunner(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "FakeClock Suite")
+	RunSpecs(t, "Spec Runner Suite")
 }
