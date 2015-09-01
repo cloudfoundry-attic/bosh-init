@@ -2,7 +2,7 @@ package cloud
 
 import (
 	"fmt"
-
+        "strconv"
 	bosherr "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/errors"
 	boshlog "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/logger"
 	biproperty "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/property"
@@ -68,11 +68,10 @@ func (c cloud) CreateStemcell(imagePath string, cloudProperties biproperty.Map) 
 		return "", NewCPIError(method, *cmdOutput.Error)
 	}
 
-	// for create_stemcell, the result is a string of the stemcell cid
-	cidString, ok := cmdOutput.Result.(string)
-	if !ok {
-		return "", bosherr.Errorf("Unexpected external CPI command result: '%#v'", cmdOutput.Result)
-	}
+	// for create_stemcell, the result is a float64 of the stemcell cid
+        // so , need to transfer to string 
+        // cidString, ok := cmdOutput.Result.(string)
+        cidString := strconv.FormatFloat(cmdOutput.Result.(float64),'f', -1, 64)
 	return cidString, nil
 }
 
@@ -137,11 +136,11 @@ func (c cloud) CreateVM(
 		return "", NewCPIError(method, *cmdOutput.Error)
 	}
 
-	// for create_vm, the result is a string of the vm cid
-	cidString, ok := cmdOutput.Result.(string)
-	if !ok {
-		return "", bosherr.Errorf("Unexpected external CPI command result: '%#v'", cmdOutput.Result)
-	}
+	// for create_vm, the result is a float64 of the vm cid
+        // so , need to transfer to string
+        // cidString, ok := cmdOutput.Result.(string)
+        cidString := strconv.FormatFloat(cmdOutput.Result.(float64),'f', -1, 64)
+
 	return cidString, nil
 }
 
@@ -187,10 +186,8 @@ func (c cloud) CreateDisk(size int, cloudProperties biproperty.Map, vmCID string
 		return "", NewCPIError(method, *cmdOutput.Error)
 	}
 
-	cidString, ok := cmdOutput.Result.(string)
-	if !ok {
-		return "", bosherr.Errorf("Unexpected external CPI command result: '%#v'", cmdOutput.Result)
-	}
+	cidString := strconv.FormatFloat(cmdOutput.Result.(float64),'f',-1,64)
+	
 	return cidString, nil
 }
 
