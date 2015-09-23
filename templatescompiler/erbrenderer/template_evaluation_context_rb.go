@@ -8,6 +8,8 @@ require "json"
 require "erb"
 require "yaml"
 
+raise "You should use Ruby with version 2.0 or greater" if RUBY_VERSION.match(/1\.\d\.\d/)
+
 class Hash
   def recursive_merge!(other)
     self.merge!(other) do |_, old_value, new_value|
