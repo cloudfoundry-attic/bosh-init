@@ -171,10 +171,11 @@ func (c *DeploymentPreparer) PrepareDeployment(stage biui.Stage) (err error) {
 					}
 				}
 			} else {
+				// HACK: pre-compiled CPI releases are now allowed
 				// It is a CPI release, check if it is compiled
-				if release.IsCompiled() {
-					return bosherr.Errorf("CPI is not allowed to be a compiled release. The provided CPI release '%s' is compiled", release.Name())
-				}
+				// if release.IsCompiled() {
+				// 	return bosherr.Errorf("CPI is not allowed to be a compiled release. The provided CPI release '%s' is compiled", release.Name())
+				// }
 			}
 		}
 

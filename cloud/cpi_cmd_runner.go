@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"os"
 
 	bosherr "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/errors"
 	boshlog "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/logger"
@@ -83,6 +84,21 @@ func (r *cpiCmdRunner) Run(context CmdContext, method string, args ...interface{
 		return CmdOutput{}, bosherr.WrapErrorf(err, "Marshalling external CPI command input %#v", cmdInput)
 	}
 
+	// HACK: symlink /var/vcap/packages to make pre-compiled ruby CPI release happy
+	r.logger.Debug(r.logTag, "Creating /var/vcap for use by compiled CPI release")
+	err = os.MkdirAll("/var/vcap/", 0755)
+	if err != nil {
+		return CmdOutput{}, bosherr.WrapErrorf(err, "Making /var/vcap/ dir")
+	}
+
+	r.logger.Debug(r.logTag, "Symlinking /var/vcap/packages")
+	_ = os.RemoveAll("/var/vcap/packages")
+	err = os.Symlink(r.cpi.PackagesDir, "/var/vcap/packages")
+	if err != nil {
+		return CmdOutput{}, bosherr.WrapErrorf(err, "Symlinking /var/vcap/packages to %s", r.cpi.PackagesDir)
+	}
+
+	r.logger.Debug(r.logTag, "Building command with JobPath: %s, JobsDir: %s, PackagesDir: %s", r.cpi.ExecutablePath(), r.cpi.JobsDir, r.cpi.PackagesDir)
 	cmdPath := r.cpi.ExecutablePath()
 	cmd := boshsys.Command{
 		Name: cmdPath,
