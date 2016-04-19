@@ -124,8 +124,9 @@ var _ = Describe("Validator", func() {
 			Expect(err.Error()).To(ContainSubstring("cloud_provider.properties.agent must be specified"))
 		})
 
-		It("validates agent mbus property is empty", func() {
+		It("validates agent mbus property is not empty", func() {
 			manifest := Manifest{
+				Mbus:       "some-url",
 				Properties: biproperty.Map{"agent": biproperty.Map{}},
 			}
 
