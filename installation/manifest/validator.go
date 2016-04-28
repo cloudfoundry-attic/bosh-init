@@ -43,9 +43,14 @@ func (v *validator) Validate(manifest Manifest, releaseSetManifest birelsetmanif
 		errs = append(errs, bosherr.Errorf("cloud_provider.template.release '%s' must refer to a release in releases", cpiReleaseName))
 	}
 
-	err := v.validateMbusConfig(manifest)
-	if err != nil {
-		errs = append(errs, bosherr.WrapError(err, "Validating mbus cloud provider properties"))
+	agentMbusUrl, agentMbusFound := v.extractAgentMbusProperty(manifest)
+	mbusUrl, mbusFound := v.extractMbusUrl(manifest)
+
+	if mbusFound && agentMbusFound {
+		err := v.validateMbusUrls(mbusUrl, agentMbusUrl)
+		if err != nil {
+			errs = append(errs, bosherr.WrapError(err, "Validating mbus cloud provider properties"))
+		}
 	}
 
 	if len(errs) > 0 {
@@ -59,47 +64,49 @@ func (v *validator) isBlank(str string) bool {
 	return str == "" || strings.TrimSpace(str) == ""
 }
 
-func (v *validator) validateMbusConfig(manifest Manifest) error {
-	errs := []error{}
+func (v *validator) extractMbusUrl(manifest Manifest) (string, bool) {
+	mbusUrl := manifest.Mbus
 
-	mbusURLString := manifest.Mbus
-	if v.isBlank(mbusURLString) {
-		errs = append(errs, bosherr.Error("cloud_provider.mbus must be provided"))
+	if v.isBlank(mbusUrl) {
+		return "", false
 	}
 
+	return mbusUrl, true
+}
+
+func (v *validator) extractAgentMbusProperty(manifest Manifest) (string, bool) {
 	agentProperties, found := manifest.Properties["agent"]
 	if !found {
-		errs = append(errs, bosherr.Error("cloud_provider.properties.agent must be specified"))
-	}
-
-	if len(errs) > 0 {
-		return bosherr.NewMultiError(errs...)
+		return "", false
 	}
 
 	agentPropertiesMap, ok := agentProperties.(biproperty.Map)
 	if !ok {
-		errs = append(errs, bosherr.Error("cloud_provider.properties.agent must be a hash"))
-		return bosherr.NewMultiError(errs...)
+		return "", false
 	}
 
-	agentMbusURLProperty, found := agentPropertiesMap["mbus"]
+	agentMbusUrlProperty, found := agentPropertiesMap["mbus"]
 	if !found {
-		errs = append(errs, bosherr.Error("cloud_provider.properties.agent.mbus must be specified"))
-		return bosherr.NewMultiError(errs...)
+		return "", false
 	}
 
-	agentMbusURLString, ok := agentMbusURLProperty.(string)
+	agentMbusUrl, ok := agentMbusUrlProperty.(string)
 	if !ok {
-		errs = append(errs, bosherr.Error("cloud_provider.properties.agent.mbus should be string"))
-		return bosherr.NewMultiError(errs...)
+		return "", false
 	}
 
-	mbusURL, err := url.ParseRequestURI(mbusURLString)
+	return agentMbusUrl, true
+}
+
+func (v *validator) validateMbusUrls(mbusUrlString string, agentMbusUrlString string) error {
+	errs := []error{}
+
+	mbusUrl, err := url.ParseRequestURI(mbusUrlString)
 	if err != nil {
 		errs = append(errs, bosherr.Error("cloud_provider.mbus should be a valid URL"))
 	}
 
-	agentMbusURL, err := url.ParseRequestURI(agentMbusURLString)
+	agentMbusUrl, err := url.ParseRequestURI(agentMbusUrlString)
 	if err != nil {
 		errs = append(errs, bosherr.Error("cloud_provider.properties.agent.mbus should be a valid URL"))
 	}
@@ -108,23 +115,23 @@ func (v *validator) validateMbusConfig(manifest Manifest) error {
 		return bosherr.NewMultiError(errs...)
 	}
 
-	if mbusURL.Scheme != "https" {
+	if mbusUrl.Scheme != "https" {
 		errs = append(errs, bosherr.Error("cloud_provider.mbus must use https protocol"))
 	}
 
-	if agentMbusURL.Scheme != "https" {
+	if agentMbusUrl.Scheme != "https" {
 		errs = append(errs, bosherr.Error("cloud_provider.properties.agent.mbus must use https protocol"))
 	}
 
-	if (mbusURL.User != nil) && (agentMbusURL.User != nil) {
-		mbusCredsAreEqual := (agentMbusURL.User.String() == mbusURL.User.String())
+	if (mbusUrl.User != nil) && (agentMbusUrl.User != nil) {
+		mbusCredsAreEqual := (agentMbusUrl.User.String() == mbusUrl.User.String())
 		if !mbusCredsAreEqual {
 			errs = append(errs, bosherr.Error("cloud_provider.properties.agent.mbus and cloud_provider.mbus should have the same password and username"))
 		}
 	}
 
-	_, mbusPort, _ := net.SplitHostPort(mbusURL.Host)
-	_, agentMbusPort, _ := net.SplitHostPort(agentMbusURL.Host)
+	_, mbusPort, _ := net.SplitHostPort(mbusUrl.Host)
+	_, agentMbusPort, _ := net.SplitHostPort(agentMbusUrl.Host)
 	if mbusPort != agentMbusPort {
 		errs = append(errs, bosherr.Error("cloud_provider.properties.agent.mbus and cloud_provider.mbus should have the same ports"))
 	}
