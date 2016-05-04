@@ -1,9 +1,11 @@
 package state
 
 import (
+	"errors"
 	biblobstore "github.com/cloudfoundry/bosh-init/blobstore"
 	bideplmanifest "github.com/cloudfoundry/bosh-init/deployment/manifest"
 	bideplrel "github.com/cloudfoundry/bosh-init/deployment/release"
+	agentclient "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-agent/agentclient"
 	bosherr "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/errors"
 	boshlog "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/logger"
 	biproperty "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/property"
@@ -11,11 +13,11 @@ import (
 	bistatejob "github.com/cloudfoundry/bosh-init/state/job"
 	bitemplate "github.com/cloudfoundry/bosh-init/templatescompiler"
 	biui "github.com/cloudfoundry/bosh-init/ui"
-	"errors"
 )
 
 type Builder interface {
-	Build(jobName string, instanceID int, deploymentManifest bideplmanifest.Manifest, stage biui.Stage) (State, error)
+	Build(jobName string, instanceID int, deploymentManifest bideplmanifest.Manifest, stage biui.Stage, agentState agentclient.AgentState) (State, error)
+	BuildInitialState(jobName string, instanceID int, deploymentManifest bideplmanifest.Manifest) (State, error)
 }
 
 type builder struct {
@@ -52,7 +54,13 @@ type renderedJobs struct {
 	Archive     bitemplate.RenderedJobListArchive
 }
 
-func (b *builder) Build(jobName string, instanceID int, deploymentManifest bideplmanifest.Manifest, stage biui.Stage) (State, error) {
+func (b *builder) Build(jobName string, instanceID int, deploymentManifest bideplmanifest.Manifest, stage biui.Stage, agentState agentclient.AgentState) (State, error) {
+
+	initialState, err := b.BuildInitialState(jobName, instanceID, deploymentManifest)
+	if err != nil {
+		return nil, bosherr.WrapErrorf(err, "Building initial state '%s", jobName)
+	}
+
 	deploymentJob, found := deploymentManifest.FindJobByName(jobName)
 	if !found {
 		return nil, bosherr.Errorf("Job '%s' not found in deployment manifest", jobName)
@@ -68,21 +76,7 @@ func (b *builder) Build(jobName string, instanceID int, deploymentManifest bidep
 		releaseJobProperties[releaseJob.Name] = releaseJob.Properties
 	}
 
-	networkInterfaces, err := deploymentManifest.NetworkInterfaces(deploymentJob.Name)
-	if err != nil {
-		return nil, bosherr.WrapErrorf(err, "Finding networks for job '%s", jobName)
-	}
-
-	// convert map to array
-	networkRefs := make([]NetworkRef, 0, len(networkInterfaces))
-	for networkName, networkInterface := range networkInterfaces {
-		networkRefs = append(networkRefs, NetworkRef{
-			Name:      networkName,
-			Interface: networkInterface,
-		})
-	}
-
-	defaultAddress, err := b.defaultAddress(networkRefs)
+	defaultAddress, err := b.defaultAddress(initialState.NetworkInterfaces(), agentState)
 	if err != nil {
 		return nil, err
 	}
@@ -127,11 +121,39 @@ func (b *builder) Build(jobName string, instanceID int, deploymentManifest bidep
 		deploymentName:         deploymentManifest.Name,
 		name:                   jobName,
 		id:                     instanceID,
-		networks:               networkRefs,
+		networks:               initialState.NetworkInterfaces(),
 		compiledPackages:       compiledDeploymentPackageRefs,
 		renderedJobs:           renderedJobRefs,
 		renderedJobListArchive: renderedJobListArchiveBlobRef,
 		hash: renderedJobTemplates.Archive.Fingerprint(),
+	}, nil
+}
+
+func (b *builder) BuildInitialState(jobName string, instanceID int, deploymentManifest bideplmanifest.Manifest) (State, error) {
+	deploymentJob, found := deploymentManifest.FindJobByName(jobName)
+	if !found {
+		return nil, bosherr.Errorf("Job '%s' not found in deployment manifest", jobName)
+	}
+
+	networkInterfaces, err := deploymentManifest.NetworkInterfaces(deploymentJob.Name)
+	if err != nil {
+		return nil, bosherr.WrapErrorf(err, "Finding networks for job '%s", jobName)
+	}
+
+	// convert map to array
+	networkRefs := make([]NetworkRef, 0, len(networkInterfaces))
+	for networkName, networkInterface := range networkInterfaces {
+		networkRefs = append(networkRefs, NetworkRef{
+			Name:      networkName,
+			Interface: networkInterface,
+		})
+	}
+
+	return &state{
+		deploymentName: deploymentManifest.Name,
+		name:           jobName,
+		id:             instanceID,
+		networks:       networkRefs,
 	}, nil
 }
 
@@ -192,14 +214,14 @@ func (b *builder) renderJobTemplates(
 	}, nil
 }
 
-func (b *builder) defaultAddress(networkRefs []NetworkRef) (string, error) {
+func (b *builder) defaultAddress(networkRefs []NetworkRef, agentState agentclient.AgentState) (string, error) {
 
 	if (networkRefs == nil) || (len(networkRefs) == 0) {
 		return "", errors.New("Must specify network")
 	}
 
 	if len(networkRefs) == 1 {
-		return networkRefs[0].Interface["ip"].(string), nil
+		return networkIp(networkRefs[0], agentState), nil
 	}
 
 	for _, ref := range networkRefs {
@@ -209,10 +231,18 @@ func (b *builder) defaultAddress(networkRefs []NetworkRef) (string, error) {
 
 		for _, val := range ref.Interface["default"].([]bideplmanifest.NetworkDefault) {
 			if val == "gateway" {
-				return ref.Interface["ip"].(string), nil
+				return networkIp(ref, agentState), nil
 			}
 		}
 	}
 
 	return "", errors.New("Must specify default network")
+}
+
+func networkIp(networkRef NetworkRef, agentState agentclient.AgentState) string {
+	if "dynamic" == networkRef.Interface["type"].(string) {
+		return agentState.NetworkSpecs[networkRef.Name].IP
+	}
+
+	return networkRef.Interface["ip"].(string)
 }
