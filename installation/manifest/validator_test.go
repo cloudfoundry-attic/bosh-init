@@ -106,7 +106,7 @@ var _ = Describe("Validator", func() {
 			Expect(err.Error()).To(ContainSubstring("cloud_provider.template.release 'not-provided-valid-release-name' must refer to a release in releases"))
 		})
 
-		It("validates mbus is not blank", func() {
+		It("validates cloud_provider.mbus is not blank", func() {
 			manifest := Manifest{Mbus: ""}
 
 			err := validator.Validate(manifest, releaseSetManifest)
@@ -114,28 +114,16 @@ var _ = Describe("Validator", func() {
 			Expect(err.Error()).To(ContainSubstring("cloud_provider.mbus must be provided"))
 		})
 
-		It("validates agent properties are not specified", func() {
-			manifest := Manifest{
-				Properties: biproperty.Map{},
-			}
+		It("validates mbus is a valid URL", func() {
+			manifest := Manifest{Mbus: "invalid-url"}
 
 			err := validator.Validate(manifest, releaseSetManifest)
 			Expect(err).To(HaveOccurred())
-			Expect(err.Error()).To(ContainSubstring("cloud_provider.properties.agent must be specified"))
+			Expect(err.Error()).To(ContainSubstring("cloud_provider.mbus should be a valid URL"))
+			Expect(err.Error()).NotTo(ContainSubstring("cloud_provider.properties.agent.mbus should be a valid URL"))
 		})
 
-		It("validates agent mbus property is not empty", func() {
-			manifest := Manifest{
-				Mbus:       "some-url",
-				Properties: biproperty.Map{"agent": biproperty.Map{}},
-			}
-
-			err := validator.Validate(manifest, releaseSetManifest)
-			Expect(err).To(HaveOccurred())
-			Expect(err.Error()).To(ContainSubstring("cloud_provider.properties.agent.mbus must be specified"))
-		})
-
-		It("validates mbus and agnet mbus are valid URLs", func() {
+		It("validates mbus URL and agnet mbus URL are valid URLs (if both specified)", func() {
 			manifest := Manifest{
 				Mbus: "invalid-url",
 				Properties: biproperty.Map{
@@ -151,7 +139,7 @@ var _ = Describe("Validator", func() {
 			Expect(err.Error()).To(ContainSubstring("cloud_provider.properties.agent.mbus should be a valid URL"))
 		})
 
-		It("validates mbus and agent mbus URLs use https protocol", func() {
+		It("validates mbus and agent mbus URLs use https protocol (if both specified)", func() {
 			manifest := Manifest{
 				Mbus: "http://valid-url",
 				Properties: biproperty.Map{
@@ -167,7 +155,7 @@ var _ = Describe("Validator", func() {
 			Expect(err.Error()).To(ContainSubstring("cloud_provider.properties.agent.mbus must use https protocol"))
 		})
 
-		It("validates mbus and agent mbus URLs use https protocol", func() {
+		It("validates mbus and agent mbus URLs use the same port", func() {
 			manifest := Manifest{
 				Mbus: "https://valid-url:3000",
 				Properties: biproperty.Map{
@@ -180,6 +168,21 @@ var _ = Describe("Validator", func() {
 			err := validator.Validate(manifest, releaseSetManifest)
 			Expect(err).To(HaveOccurred())
 			Expect(err.Error()).To(ContainSubstring("cloud_provider.properties.agent.mbus and cloud_provider.mbus should have the same ports"))
+		})
+
+		It("validates mbus and agent mbus URLs use the same port", func() {
+			manifest := Manifest{
+				Mbus: "https://user1:pass1@valid-url:3000",
+				Properties: biproperty.Map{
+					"agent": biproperty.Map{
+						"mbus": "https://user2:pass2@valid-url:3000",
+					},
+				},
+			}
+
+			err := validator.Validate(manifest, releaseSetManifest)
+			Expect(err).To(HaveOccurred())
+			Expect(err.Error()).To(ContainSubstring("cloud_provider.properties.agent.mbus and cloud_provider.mbus should have the same password and username"))
 		})
 
 	})

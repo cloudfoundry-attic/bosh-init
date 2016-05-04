@@ -43,10 +43,17 @@ func (v *validator) Validate(manifest Manifest, releaseSetManifest birelsetmanif
 		errs = append(errs, bosherr.Errorf("cloud_provider.template.release '%s' must refer to a release in releases", cpiReleaseName))
 	}
 
-	agentMbusUrl, agentMbusFound := v.extractAgentMbusProperty(manifest)
-	mbusUrl, mbusFound := v.extractMbusUrl(manifest)
+	mbusUrl, mbusUrlIsValid, err := v.extractMbusUrl(manifest)
+	if err != nil {
+		errs = append(errs, err)
+	}
 
-	if mbusFound && agentMbusFound {
+	agentMbusUrl, agentMbusUrlFound, err := v.extractAgentMbusUrl(manifest)
+	if err != nil {
+		errs = append(errs, err)
+	}
+
+	if mbusUrlIsValid && agentMbusUrlFound {
 		err := v.validateMbusUrls(mbusUrl, agentMbusUrl)
 		if err != nil {
 			errs = append(errs, bosherr.WrapError(err, "Validating mbus cloud provider properties"))
@@ -64,56 +71,52 @@ func (v *validator) isBlank(str string) bool {
 	return str == "" || strings.TrimSpace(str) == ""
 }
 
-func (v *validator) extractMbusUrl(manifest Manifest) (string, bool) {
-	mbusUrl := manifest.Mbus
+func (v *validator) extractMbusUrl(manifest Manifest) (url.URL, bool, error) {
+	mbusUrlString := manifest.Mbus
 
-	if v.isBlank(mbusUrl) {
-		return "", false
+	if v.isBlank(mbusUrlString) {
+		return url.URL{}, false, bosherr.Errorf("cloud_provider.mbus must be provided")
 	}
 
-	return mbusUrl, true
+	mbusUrl, err := url.ParseRequestURI(mbusUrlString)
+	if err != nil {
+		return url.URL{}, false, bosherr.Error("cloud_provider.mbus should be a valid URL")
+	}
+
+	return *mbusUrl, true, nil
 }
 
-func (v *validator) extractAgentMbusProperty(manifest Manifest) (string, bool) {
+func (v *validator) extractAgentMbusUrl(manifest Manifest) (url.URL, bool, error) {
 	agentProperties, found := manifest.Properties["agent"]
 	if !found {
-		return "", false
+		return url.URL{}, false, nil
 	}
 
 	agentPropertiesMap, ok := agentProperties.(biproperty.Map)
 	if !ok {
-		return "", false
+		return url.URL{}, false, nil
 	}
 
 	agentMbusUrlProperty, found := agentPropertiesMap["mbus"]
 	if !found {
-		return "", false
+		return url.URL{}, false, nil
 	}
 
-	agentMbusUrl, ok := agentMbusUrlProperty.(string)
+	agentMbusUrlString, ok := agentMbusUrlProperty.(string)
 	if !ok {
-		return "", false
-	}
-
-	return agentMbusUrl, true
-}
-
-func (v *validator) validateMbusUrls(mbusUrlString string, agentMbusUrlString string) error {
-	errs := []error{}
-
-	mbusUrl, err := url.ParseRequestURI(mbusUrlString)
-	if err != nil {
-		errs = append(errs, bosherr.Error("cloud_provider.mbus should be a valid URL"))
+		return url.URL{}, false, bosherr.Error("cloud_provider.properties.agent.mbus should be a string")
 	}
 
 	agentMbusUrl, err := url.ParseRequestURI(agentMbusUrlString)
 	if err != nil {
-		errs = append(errs, bosherr.Error("cloud_provider.properties.agent.mbus should be a valid URL"))
+		return url.URL{}, false, bosherr.Error("cloud_provider.properties.agent.mbus should be a valid URL")
 	}
 
-	if len(errs) > 0 {
-		return bosherr.NewMultiError(errs...)
-	}
+	return *agentMbusUrl, true, nil
+}
+
+func (v *validator) validateMbusUrls(mbusUrl url.URL, agentMbusUrl url.URL) error {
+	errs := []error{}
 
 	if mbusUrl.Scheme != "https" {
 		errs = append(errs, bosherr.Error("cloud_provider.mbus must use https protocol"))
