@@ -4,10 +4,10 @@
 package mocks
 
 import (
-	property "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/property"
-	gomock "github.com/cloudfoundry/bosh-init/internal/github.com/golang/mock/gomock"
 	job "github.com/cloudfoundry/bosh-init/release/job"
 	templatescompiler "github.com/cloudfoundry/bosh-init/templatescompiler"
+	property "github.com/cloudfoundry/bosh-utils/property"
+	gomock "github.com/golang/mock/gomock"
 )
 
 // Mock of JobRenderer interface
@@ -31,7 +31,7 @@ func (_m *MockJobRenderer) EXPECT() *_MockJobRendererRecorder {
 	return _m.recorder
 }
 
-func (_m *MockJobRenderer) Render(_param0 job.Job, _param1 map[string]property.Map, _param2 property.Map, _param3 property.Map, _param4 string, _param5 string) (templatescompiler.RenderedJob, error) {
+func (_m *MockJobRenderer) Render(_param0 job.Job, _param1 property.Map, _param2 property.Map, _param3 property.Map, _param4 string, _param5 string) (templatescompiler.RenderedJob, error) {
 	ret := _m.ctrl.Call(_m, "Render", _param0, _param1, _param2, _param3, _param4, _param5)
 	ret0, _ := ret[0].(templatescompiler.RenderedJob)
 	ret1, _ := ret[1].(error)

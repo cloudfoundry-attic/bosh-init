@@ -3,14 +3,14 @@ package templatescompiler_test
 import (
 	"path/filepath"
 
-	bosherr "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/errors"
-	boshlog "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/logger"
-	biproperty "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/property"
-	fakesys "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/system/fakes"
-	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/ginkgo"
-	. "github.com/cloudfoundry/bosh-init/internal/github.com/onsi/gomega"
 	bireljob "github.com/cloudfoundry/bosh-init/release/job"
 	bierbrenderer "github.com/cloudfoundry/bosh-init/templatescompiler/erbrenderer"
+	bosherr "github.com/cloudfoundry/bosh-utils/errors"
+	boshlog "github.com/cloudfoundry/bosh-utils/logger"
+	biproperty "github.com/cloudfoundry/bosh-utils/property"
+	fakesys "github.com/cloudfoundry/bosh-utils/system/fakes"
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
 
 	fakebirender "github.com/cloudfoundry/bosh-init/templatescompiler/erbrenderer/fakes"
 
@@ -24,7 +24,7 @@ var _ = Describe("JobRenderer", func() {
 		job                  bireljob.Job
 		context              bierbrenderer.TemplateEvaluationContext
 		fs                   *fakesys.FakeFileSystem
-		releaseJobProperties map[string]biproperty.Map
+		releaseJobProperties biproperty.Map
 		jobProperties        biproperty.Map
 		globalProperties     biproperty.Map
 		srcPath              string
@@ -35,7 +35,7 @@ var _ = Describe("JobRenderer", func() {
 		srcPath = "fake-src-path"
 		dstPath = "fake-dst-path"
 
-		releaseJobProperties = map[string]biproperty.Map{
+		releaseJobProperties = biproperty.Map{
 			"fake-release-job-name": biproperty.Map{
 				"fake-template-property": "fake-template-property-value",
 			},

@@ -3,16 +3,16 @@ package templatescompiler
 import (
 	"encoding/json"
 
-	bosherr "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/errors"
-	boshlog "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/logger"
-	biproperty "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/property"
 	bireljob "github.com/cloudfoundry/bosh-init/release/job"
 	bierbrenderer "github.com/cloudfoundry/bosh-init/templatescompiler/erbrenderer"
+	bosherr "github.com/cloudfoundry/bosh-utils/errors"
+	boshlog "github.com/cloudfoundry/bosh-utils/logger"
+	biproperty "github.com/cloudfoundry/bosh-utils/property"
 )
 
 type jobEvaluationContext struct {
 	releaseJob           bireljob.Job
-	releaseJobProperties map[string]biproperty.Map
+	releaseJobProperties biproperty.Map
 	jobProperties        biproperty.Map
 	globalProperties     biproperty.Map
 	deploymentName       string
@@ -54,7 +54,7 @@ type networkContext struct {
 
 func NewJobEvaluationContext(
 	releaseJob bireljob.Job,
-	releaseJobProperties map[string]biproperty.Map,
+	releaseJobProperties biproperty.Map,
 	jobProperties biproperty.Map,
 	globalProperties biproperty.Map,
 	deploymentName string,
@@ -86,7 +86,7 @@ func (ec jobEvaluationContext) MarshalJSON() ([]byte, error) {
 		NetworkContexts:   ec.buildNetworkContexts(),
 		GlobalProperties:  ec.globalProperties,
 		ClusterProperties: ec.jobProperties,
-		JobProperties:     ec.releaseJobProperties[ec.releaseJob.Name],
+		JobProperties:     ec.releaseJobProperties,
 		DefaultProperties: defaultProperties,
 	}
 

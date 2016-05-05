@@ -4,16 +4,16 @@ import (
 	"os"
 	"path/filepath"
 
-	bosherr "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/errors"
-	boshlog "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/logger"
-	biproperty "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/property"
-	boshsys "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/system"
 	bireljob "github.com/cloudfoundry/bosh-init/release/job"
 	bierbrenderer "github.com/cloudfoundry/bosh-init/templatescompiler/erbrenderer"
+	bosherr "github.com/cloudfoundry/bosh-utils/errors"
+	boshlog "github.com/cloudfoundry/bosh-utils/logger"
+	biproperty "github.com/cloudfoundry/bosh-utils/property"
+	boshsys "github.com/cloudfoundry/bosh-utils/system"
 )
 
 type JobRenderer interface {
-	Render(releaseJob bireljob.Job, releaseJobProperties map[string]biproperty.Map, jobProperties, globalProperties biproperty.Map, deploymentName string, address string) (RenderedJob, error)
+	Render(releaseJob bireljob.Job, releaseJobProperties biproperty.Map, jobProperties, globalProperties biproperty.Map, deploymentName string, address string) (RenderedJob, error)
 }
 
 type jobRenderer struct {
@@ -36,7 +36,7 @@ func NewJobRenderer(
 	}
 }
 
-func (r *jobRenderer) Render(releaseJob bireljob.Job, releaseJobProperties map[string]biproperty.Map, jobProperties, globalProperties biproperty.Map, deploymentName string, address string) (RenderedJob, error) {
+func (r *jobRenderer) Render(releaseJob bireljob.Job, releaseJobProperties biproperty.Map, jobProperties, globalProperties biproperty.Map, deploymentName string, address string) (RenderedJob, error) {
 	context := NewJobEvaluationContext(releaseJob, releaseJobProperties, jobProperties, globalProperties, deploymentName, address, r.logger)
 
 	sourcePath := releaseJob.ExtractedPath
