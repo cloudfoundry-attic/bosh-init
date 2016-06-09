@@ -5,10 +5,10 @@ import (
 	"net/url"
 	"strings"
 
-	biproperty "github.com/cloudfoundry/bosh-init/internal/github.com/cloudfoundry/bosh-utils/property"
 	birelsetmanifest "github.com/cloudfoundry/bosh-init/release/set/manifest"
 	bosherr "github.com/cloudfoundry/bosh-utils/errors"
 	boshlog "github.com/cloudfoundry/bosh-utils/logger"
+	biproperty "github.com/cloudfoundry/bosh-utils/property"
 )
 
 type Validator interface {
@@ -80,7 +80,7 @@ func (v *validator) extractMbusUrl(manifest Manifest) (url.URL, bool, error) {
 
 	mbusUrl, err := url.ParseRequestURI(mbusUrlString)
 	if err != nil {
-		return url.URL{}, false, bosherr.Error("cloud_provider.mbus should be a valid URL")
+		return url.URL{}, false, bosherr.Error("cloud_provider.mbus must be a valid URL")
 	}
 
 	return *mbusUrl, true, nil
@@ -104,12 +104,12 @@ func (v *validator) extractAgentMbusUrl(manifest Manifest) (url.URL, bool, error
 
 	agentMbusUrlString, ok := agentMbusUrlProperty.(string)
 	if !ok {
-		return url.URL{}, false, bosherr.Error("cloud_provider.properties.agent.mbus should be a string")
+		return url.URL{}, false, bosherr.Error("cloud_provider.properties.agent.mbus must be a string")
 	}
 
 	agentMbusUrl, err := url.ParseRequestURI(agentMbusUrlString)
 	if err != nil {
-		return url.URL{}, false, bosherr.Error("cloud_provider.properties.agent.mbus should be a valid URL")
+		return url.URL{}, false, bosherr.Error("cloud_provider.properties.agent.mbus must be a valid URL")
 	}
 
 	return *agentMbusUrl, true, nil
@@ -129,14 +129,14 @@ func (v *validator) validateMbusUrls(mbusUrl url.URL, agentMbusUrl url.URL) erro
 	if (mbusUrl.User != nil) && (agentMbusUrl.User != nil) {
 		mbusCredsAreEqual := (agentMbusUrl.User.String() == mbusUrl.User.String())
 		if !mbusCredsAreEqual {
-			errs = append(errs, bosherr.Error("cloud_provider.properties.agent.mbus and cloud_provider.mbus should have the same password and username"))
+			errs = append(errs, bosherr.Error("cloud_provider.properties.agent.mbus and cloud_provider.mbus must have the same password and username"))
 		}
 	}
 
 	_, mbusPort, _ := net.SplitHostPort(mbusUrl.Host)
 	_, agentMbusPort, _ := net.SplitHostPort(agentMbusUrl.Host)
 	if mbusPort != agentMbusPort {
-		errs = append(errs, bosherr.Error("cloud_provider.properties.agent.mbus and cloud_provider.mbus should have the same ports"))
+		errs = append(errs, bosherr.Error("cloud_provider.properties.agent.mbus and cloud_provider.mbus must have the same ports"))
 	}
 
 	if len(errs) > 0 {

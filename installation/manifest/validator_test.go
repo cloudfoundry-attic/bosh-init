@@ -119,8 +119,8 @@ var _ = Describe("Validator", func() {
 
 			err := validator.Validate(manifest, releaseSetManifest)
 			Expect(err).To(HaveOccurred())
-			Expect(err.Error()).To(ContainSubstring("cloud_provider.mbus should be a valid URL"))
-			Expect(err.Error()).NotTo(ContainSubstring("cloud_provider.properties.agent.mbus should be a valid URL"))
+			Expect(err.Error()).To(ContainSubstring("cloud_provider.mbus must be a valid URL"))
+			Expect(err.Error()).NotTo(ContainSubstring("cloud_provider.properties.agent.mbus must be a valid URL"))
 		})
 
 		It("validates mbus URL and agnet mbus URL are valid URLs (if both specified)", func() {
@@ -135,8 +135,8 @@ var _ = Describe("Validator", func() {
 
 			err := validator.Validate(manifest, releaseSetManifest)
 			Expect(err).To(HaveOccurred())
-			Expect(err.Error()).To(ContainSubstring("cloud_provider.mbus should be a valid URL"))
-			Expect(err.Error()).To(ContainSubstring("cloud_provider.properties.agent.mbus should be a valid URL"))
+			Expect(err.Error()).To(ContainSubstring("cloud_provider.mbus must be a valid URL"))
+			Expect(err.Error()).To(ContainSubstring("cloud_provider.properties.agent.mbus must be a valid URL"))
 		})
 
 		It("validates mbus and agent mbus URLs use https protocol (if both specified)", func() {
@@ -167,7 +167,7 @@ var _ = Describe("Validator", func() {
 
 			err := validator.Validate(manifest, releaseSetManifest)
 			Expect(err).To(HaveOccurred())
-			Expect(err.Error()).To(ContainSubstring("cloud_provider.properties.agent.mbus and cloud_provider.mbus should have the same ports"))
+			Expect(err.Error()).To(ContainSubstring("cloud_provider.properties.agent.mbus and cloud_provider.mbus must have the same ports"))
 		})
 
 		It("validates mbus and agent mbus URLs use the same port", func() {
@@ -182,7 +182,7 @@ var _ = Describe("Validator", func() {
 
 			err := validator.Validate(manifest, releaseSetManifest)
 			Expect(err).To(HaveOccurred())
-			Expect(err.Error()).To(ContainSubstring("cloud_provider.properties.agent.mbus and cloud_provider.mbus should have the same password and username"))
+			Expect(err.Error()).To(ContainSubstring("cloud_provider.properties.agent.mbus and cloud_provider.mbus must have the same password and username"))
 		})
 
 	})
