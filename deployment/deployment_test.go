@@ -7,7 +7,7 @@ import (
 	. "github.com/onsi/gomega"
 	"time"
 
-	mock_agentclient "github.com/cloudfoundry/bosh-agent/agentclient/mocks"
+	mock_agentclient "github.com/cloudfoundry/bosh-init/agentclient/mocks"
 	mock_blobstore "github.com/cloudfoundry/bosh-init/blobstore/mocks"
 	mock_cloud "github.com/cloudfoundry/bosh-init/cloud/mocks"
 	mock_instance_state "github.com/cloudfoundry/bosh-init/deployment/instance/state/mocks"
@@ -23,7 +23,6 @@ import (
 	bistemcell "github.com/cloudfoundry/bosh-init/stemcell"
 	bosherr "github.com/cloudfoundry/bosh-utils/errors"
 	boshlog "github.com/cloudfoundry/bosh-utils/logger"
-	biproperty "github.com/cloudfoundry/bosh-utils/property"
 	boshsys "github.com/cloudfoundry/bosh-utils/system"
 	fakesys "github.com/cloudfoundry/bosh-utils/system/fakes"
 	fakeuuid "github.com/cloudfoundry/bosh-utils/uuid/fakes"
@@ -91,9 +90,9 @@ var _ = Describe("Deployment", func() {
 				Deployment: "test-release",
 				Index:      jobIndex,
 				Packages:   map[string]bias.Blob{},
-				Networks: map[string]biproperty.Map{
-					"network-1": biproperty.Map{
-						"cloud_properties": biproperty.Map{},
+				Networks: map[string]interface{}{
+					"network-1": map[string]interface{}{
+						"cloud_properties": map[string]interface{}{},
 						"type":             "dynamic",
 						"ip":               "",
 					},

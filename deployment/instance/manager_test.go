@@ -8,7 +8,7 @@ import (
 	. "github.com/onsi/gomega"
 	"time"
 
-	mock_agentclient "github.com/cloudfoundry/bosh-agent/agentclient/mocks"
+	mock_agentclient "github.com/cloudfoundry/bosh-init/agentclient/mocks"
 	mock_blobstore "github.com/cloudfoundry/bosh-init/blobstore/mocks"
 	mock_instance_state "github.com/cloudfoundry/bosh-init/deployment/instance/state/mocks"
 	"github.com/golang/mock/gomock"
@@ -113,7 +113,7 @@ var _ = Describe("Manager", func() {
 				Deployment: "test-release",
 				Index:      jobIndex,
 				Packages:   map[string]bias.Blob{},
-				Networks: map[string]biproperty.Map{
+				Networks: map[string]interface{}{
 					"network-1": biproperty.Map{
 						"cloud_properties": biproperty.Map{},
 						"type":             "dynamic",

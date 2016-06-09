@@ -28,6 +28,7 @@ import (
 )
 
 var _ = Describe("Instance", func() {
+
 	var mockCtrl *gomock.Controller
 
 	BeforeEach(func() {
@@ -320,7 +321,7 @@ var _ = Describe("Instance", func() {
 				{ApplySpec: applySpec},
 				{ApplySpec: applySpec},
 			}))
-			Expect(fakeVM.RunScriptInputs).To(Equal([]string{"pre-start"}))
+			Expect(fakeVM.RunScriptInputs).To(Equal([]string{"pre-start", "post-start"}))
 			Expect(fakeVM.StartCalled).To(Equal(1))
 		})
 
@@ -341,6 +342,7 @@ var _ = Describe("Instance", func() {
 			Expect(fakeStage.PerformCalls).To(Equal([]*fakebiui.PerformCall{
 				{Name: "Updating instance 'fake-job-name/0'"},
 				{Name: "Waiting for instance 'fake-job-name/0' to be running"},
+				{Name: "Running the post-start scripts 'fake-job-name/0'"},
 			}))
 		})
 
@@ -386,13 +388,25 @@ var _ = Describe("Instance", func() {
 
 		Context("when running the pre-start script fails", func() {
 			BeforeEach(func() {
-				fakeVM.RunScriptErr = bosherr.Error("fake-run-script-error")
+				fakeVM.RunScriptErrors["pre-start"] = bosherr.Error("fake-run-script-error")
 			})
 
 			It("returns the error", func() {
 				err := instance.UpdateJobs(deploymentManifest, fakeStage)
 				Expect(err).To(HaveOccurred())
 				Expect(err.Error()).To(ContainSubstring("fake-run-script-error"))
+			})
+		})
+
+		Context("when running the post-start script fails", func() {
+			BeforeEach(func() {
+				fakeVM.RunScriptErrors["post-start"] = bosherr.Error("fake-run-script-error-poststart")
+			})
+
+			It("returns the error", func() {
+				err := instance.UpdateJobs(deploymentManifest, fakeStage)
+				Expect(err).To(HaveOccurred())
+				Expect(err.Error()).To(ContainSubstring("fake-run-script-error-poststart"))
 			})
 		})
 

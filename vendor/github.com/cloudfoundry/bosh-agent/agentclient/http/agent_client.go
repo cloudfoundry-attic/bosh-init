@@ -2,6 +2,7 @@ package http
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/cloudfoundry/bosh-agent/agentclient"
@@ -11,7 +12,6 @@ import (
 	"github.com/cloudfoundry/bosh-utils/httpclient"
 	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 	boshretry "github.com/cloudfoundry/bosh-utils/retrystrategy"
-	"strings"
 )
 
 type agentClient struct {
@@ -80,22 +80,6 @@ func (c *agentClient) Start() error {
 	return nil
 }
 
-func (c *agentClient) RunScript(script string) error {
-	var response TaskResponse
-	err := c.agentRequest.Send("run_script", []interface{}{script, make(map[string]string)}, &response)
-
-	if err != nil {
-		if strings.Contains(err.Error(), "unknown message") {
-			// ignore 'unknown message' errors for backwards compatibility with older stemcells
-			c.logger.Warn(c.logTag, "Ignoring run_script 'unknown message' error from the agent: %s. Received while trying to run: %s", err.Error(), script)
-		} else {
-			return bosherr.WrapError(err, "Running script")
-		}
-	}
-
-	return nil
-}
-
 func (c *agentClient) GetState() (agentclient.AgentState, error) {
 	var response StateResponse
 
@@ -151,6 +135,80 @@ func (c *agentClient) UpdateSettings(settings settings.Settings) error {
 	return err
 }
 
+func (c *agentClient) RunScript(scriptName string, options map[string]interface{}) error {
+	_, err := c.sendAsyncTaskMessage("run_script", []interface{}{scriptName, options})
+
+	if err != nil && strings.Contains(err.Error(), "unknown message") {
+		// ignore 'unknown message' errors for backwards compatibility with older stemcells
+		c.logger.Warn(c.logTag, "Ignoring run_script 'unknown message' error from the agent: %s. Received while trying to run: %s", err.Error(), scriptName)
+		return nil
+	}
+
+	return err
+}
+
+func (c *agentClient) CompilePackage(packageSource agentclient.BlobRef, compiledPackageDependencies []agentclient.BlobRef) (compiledPackageRef agentclient.BlobRef, err error) {
+	dependencies := make(map[string]BlobRef, len(compiledPackageDependencies))
+	for _, dependency := range compiledPackageDependencies {
+		dependencies[dependency.Name] = BlobRef{
+			Name:        dependency.Name,
+			Version:     dependency.Version,
+			SHA1:        dependency.SHA1,
+			BlobstoreID: dependency.BlobstoreID,
+		}
+	}
+
+	args := []interface{}{
+		packageSource.BlobstoreID,
+		packageSource.SHA1,
+		packageSource.Name,
+		packageSource.Version,
+		dependencies,
+	}
+
+	responseValue, err := c.sendAsyncTaskMessage("compile_package", args)
+	if err != nil {
+		return agentclient.BlobRef{}, bosherr.WrapError(err, "Sending 'compile_package' to the agent")
+	}
+
+	result, ok := responseValue["result"].(map[string]interface{})
+	if !ok {
+		return agentclient.BlobRef{}, bosherr.Errorf("Unable to parse 'compile_package' response from the agent: %#v", responseValue)
+	}
+
+	sha1, ok := result["sha1"].(string)
+	if !ok {
+		return agentclient.BlobRef{}, bosherr.Errorf("Unable to parse 'compile_package' response from the agent: %#v", responseValue)
+	}
+
+	blobstoreID, ok := result["blobstore_id"].(string)
+	if !ok {
+		return agentclient.BlobRef{}, bosherr.Errorf("Unable to parse 'compile_package' response from the agent: %#v", responseValue)
+	}
+
+	compiledPackageRef = agentclient.BlobRef{
+		Name:        packageSource.Name,
+		Version:     packageSource.Version,
+		SHA1:        sha1,
+		BlobstoreID: blobstoreID,
+	}
+
+	return compiledPackageRef, nil
+}
+
+func (c *agentClient) DeleteARPEntries(ips []string) error {
+	return c.agentRequest.Send("delete_arp_entries", []interface{}{map[string][]string{"ips": ips}}, &TaskResponse{})
+}
+
+func (c *agentClient) SyncDNS(blobID, sha1 string) error {
+	err := c.agentRequest.Send("sync_dns", []interface{}{blobID, sha1}, &SyncDNSResponse{})
+	if err != nil {
+		return bosherr.WrapError(err, "Sending 'sync_dns' to the agent")
+	}
+
+	return nil
+}
+
 func (c *agentClient) sendAsyncTaskMessage(method string, arguments []interface{}) (value map[string]interface{}, err error) {
 	var response TaskResponse
 	err = c.agentRequest.Send(method, arguments, &response)
@@ -201,53 +259,4 @@ func (c *agentClient) sendAsyncTaskMessage(method string, arguments []interface{
 	// execution order issues: https://code.google.com/p/go/issues/detail?id=8698&thanks=8698&ts=1410376474
 	err = getTaskRetryStrategy.Try()
 	return value, err
-}
-
-func (c *agentClient) CompilePackage(packageSource agentclient.BlobRef, compiledPackageDependencies []agentclient.BlobRef) (compiledPackageRef agentclient.BlobRef, err error) {
-	dependencies := make(map[string]BlobRef, len(compiledPackageDependencies))
-	for _, dependency := range compiledPackageDependencies {
-		dependencies[dependency.Name] = BlobRef{
-			Name:        dependency.Name,
-			Version:     dependency.Version,
-			SHA1:        dependency.SHA1,
-			BlobstoreID: dependency.BlobstoreID,
-		}
-	}
-
-	args := []interface{}{
-		packageSource.BlobstoreID,
-		packageSource.SHA1,
-		packageSource.Name,
-		packageSource.Version,
-		dependencies,
-	}
-
-	responseValue, err := c.sendAsyncTaskMessage("compile_package", args)
-	if err != nil {
-		return agentclient.BlobRef{}, bosherr.WrapError(err, "Sending 'compile_package' to the agent")
-	}
-
-	result, ok := responseValue["result"].(map[string]interface{})
-	if !ok {
-		return agentclient.BlobRef{}, bosherr.Errorf("Unable to parse 'compile_package' response from the agent: %#v", responseValue)
-	}
-
-	sha1, ok := result["sha1"].(string)
-	if !ok {
-		return agentclient.BlobRef{}, bosherr.Errorf("Unable to parse 'compile_package' response from the agent: %#v", responseValue)
-	}
-
-	blobstoreID, ok := result["blobstore_id"].(string)
-	if !ok {
-		return agentclient.BlobRef{}, bosherr.Errorf("Unable to parse 'compile_package' response from the agent: %#v", responseValue)
-	}
-
-	compiledPackageRef = agentclient.BlobRef{
-		Name:        packageSource.Name,
-		Version:     packageSource.Version,
-		SHA1:        sha1,
-		BlobstoreID: blobstoreID,
-	}
-
-	return compiledPackageRef, nil
 }

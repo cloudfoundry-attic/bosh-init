@@ -18,7 +18,7 @@ import (
 	"github.com/onsi/gomega/gbytes"
 
 	mock_httpagent "github.com/cloudfoundry/bosh-agent/agentclient/http/mocks"
-	mock_agentclient "github.com/cloudfoundry/bosh-agent/agentclient/mocks"
+	mock_agentclient "github.com/cloudfoundry/bosh-init/agentclient/mocks"
 	mock_blobstore "github.com/cloudfoundry/bosh-init/blobstore/mocks"
 	mock_cloud "github.com/cloudfoundry/bosh-init/cloud/mocks"
 	mock_instance_state "github.com/cloudfoundry/bosh-init/deployment/instance/state/mocks"
@@ -344,9 +344,9 @@ cloud_provider:
 			applySpec = bias.ApplySpec{
 				Deployment: "test-release",
 				Index:      jobIndex,
-				Networks: map[string]biproperty.Map{
-					"network-1": biproperty.Map{
-						"cloud_properties": biproperty.Map{},
+				Networks: map[string]interface{}{
+					"network-1": map[string]interface{}{
+						"cloud_properties": map[string]interface{}{},
 						"type":             "dynamic",
 						"ip":               "",
 					},
@@ -505,9 +505,10 @@ cloud_provider:
 				mockAgentClient.EXPECT().GetState(),
 				mockAgentClient.EXPECT().Stop(),
 				mockAgentClient.EXPECT().Apply(applySpec),
-				mockAgentClient.EXPECT().RunScript("pre-start"),
+				mockAgentClient.EXPECT().RunScript("pre-start", map[string]interface{}{}),
 				mockAgentClient.EXPECT().Start(),
 				mockAgentClient.EXPECT().GetState().Return(agentRunningState, nil),
+				mockAgentClient.EXPECT().RunScript("post-start", map[string]interface{}{}),
 			)
 		}
 
@@ -551,9 +552,10 @@ cloud_provider:
 				mockAgentClient.EXPECT().GetState(),
 				mockAgentClient.EXPECT().Stop(),
 				mockAgentClient.EXPECT().Apply(applySpec),
-				mockAgentClient.EXPECT().RunScript("pre-start"),
+				mockAgentClient.EXPECT().RunScript("pre-start", map[string]interface{}{}),
 				mockAgentClient.EXPECT().Start(),
 				mockAgentClient.EXPECT().GetState().Return(agentRunningState, nil),
+				mockAgentClient.EXPECT().RunScript("post-start", map[string]interface{}{}),
 			)
 		}
 
@@ -593,9 +595,10 @@ cloud_provider:
 				mockAgentClient.EXPECT().GetState(),
 				mockAgentClient.EXPECT().Stop(),
 				mockAgentClient.EXPECT().Apply(applySpec),
-				mockAgentClient.EXPECT().RunScript("pre-start"),
+				mockAgentClient.EXPECT().RunScript("pre-start", map[string]interface{}{}),
 				mockAgentClient.EXPECT().Start(),
 				mockAgentClient.EXPECT().GetState().Return(agentRunningState, nil),
+				mockAgentClient.EXPECT().RunScript("post-start", map[string]interface{}{}),
 			)
 		}
 
@@ -703,9 +706,10 @@ cloud_provider:
 				mockAgentClient.EXPECT().GetState(),
 				mockAgentClient.EXPECT().Stop(),
 				mockAgentClient.EXPECT().Apply(applySpec),
-				mockAgentClient.EXPECT().RunScript("pre-start"),
+				mockAgentClient.EXPECT().RunScript("pre-start", map[string]interface{}{}),
 				mockAgentClient.EXPECT().Start(),
 				mockAgentClient.EXPECT().GetState().Return(agentRunningState, nil),
+				mockAgentClient.EXPECT().RunScript("post-start", map[string]interface{}{}),
 			)
 		}
 
@@ -762,9 +766,10 @@ cloud_provider:
 					func() { expectRegistryToWork() },
 				),
 				mockAgentClient.EXPECT().Apply(applySpec),
-				mockAgentClient.EXPECT().RunScript("pre-start"),
+				mockAgentClient.EXPECT().RunScript("pre-start", map[string]interface{}{}),
 				mockAgentClient.EXPECT().Start(),
 				mockAgentClient.EXPECT().GetState().Return(agentRunningState, nil),
+				mockAgentClient.EXPECT().RunScript("post-start", map[string]interface{}{}),
 			)
 		}
 
@@ -808,7 +813,7 @@ cloud_provider:
 
 			mockBlobstoreFactory = mock_blobstore.NewMockFactory(mockCtrl)
 			mockBlobstore = mock_blobstore.NewMockBlobstore(mockCtrl)
-			mockBlobstoreFactory.EXPECT().Create(mbusURL).Return(mockBlobstore, nil).AnyTimes()
+			mockBlobstoreFactory.EXPECT().Create(mbusURL, gomock.Any()).Return(mockBlobstore, nil).AnyTimes()
 
 			fakeStemcellExtractor = fakebistemcell.NewFakeExtractor()
 

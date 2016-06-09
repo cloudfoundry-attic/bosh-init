@@ -1,12 +1,13 @@
 package agentclient_test
 
 import (
+	"testing"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"testing"
 )
 
 func TestAgentclient(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "AgentClient Suite")
+	RunSpecs(t, "Agent Client Suite")
 }

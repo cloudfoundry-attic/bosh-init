@@ -167,7 +167,7 @@ func (i *instance) UpdateJobs(
 			return bosherr.WrapError(err, "Applying the agent state")
 		}
 
-		err = i.vm.RunScript("pre-start")
+		err = i.vm.RunScript("pre-start", map[string]interface{}{})
 		if err != nil {
 			return bosherr.WrapError(err, "Running the pre-start script")
 		}
@@ -183,7 +183,21 @@ func (i *instance) UpdateJobs(
 		return err
 	}
 
-	return i.waitUntilJobsAreRunning(deploymentManifest.Update.UpdateWatchTime, stage)
+	err = i.waitUntilJobsAreRunning(deploymentManifest.Update.UpdateWatchTime, stage)
+	if err != nil {
+		return err
+	}
+
+	stepName = fmt.Sprintf("Running the post-start scripts '%s/%d'", i.jobName, i.id)
+	err = stage.Perform(stepName, func() error {
+		err = i.vm.RunScript("post-start", map[string]interface{}{})
+		if err != nil {
+			return bosherr.WrapError(err, "Running the post-start script")
+		}
+		return nil
+	})
+
+	return err
 }
 
 func (i *instance) Delete(

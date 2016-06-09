@@ -84,7 +84,7 @@ func describeBuilder() {
 							{
 								Name:    "fake-release-job-name",
 								Release: "fake-release-name",
-								Properties: biproperty.Map{
+								Properties: &biproperty.Map{
 									"fake-template-property": "fake-template-property-value",
 								},
 							},
@@ -130,8 +130,8 @@ func describeBuilder() {
 					Templates: []bias.Blob{},
 				},
 				Packages: map[string]bias.Blob{},
-				Networks: map[string]biproperty.Map{
-					"fake-network-name": biproperty.Map{
+				Networks: map[string]interface{}{
+					"fake-network-name": map[string]interface{}{
 						"type":    "fake-network-type",
 						"default": []bideplmanifest.NetworkDefault{"dns", "gateway"},
 						"ip":      "1.2.3.4",
@@ -142,7 +142,6 @@ func describeBuilder() {
 				},
 			}))
 		})
-
 	})
 
 	Describe("Build", func() {
@@ -188,7 +187,7 @@ func describeBuilder() {
 							{
 								Name:    "fake-release-job-name",
 								Release: "fake-release-name",
-								Properties: biproperty.Map{
+								Properties: &biproperty.Map{
 									"fake-template-property": "fake-template-property-value",
 								},
 							},
@@ -285,8 +284,8 @@ func describeBuilder() {
 			}
 			expectCompile = mockDependencyCompiler.EXPECT().Compile(releaseJobs, fakeStage).Return(compiledPackageRefs, nil).AnyTimes()
 
-			releaseJobProperties := map[string]biproperty.Map{
-				"fake-release-job-name": biproperty.Map{
+			releaseJobProperties := map[string]*biproperty.Map{
+				"fake-release-job-name": &biproperty.Map{
 					"fake-template-property": "fake-template-property-value",
 				},
 			}
@@ -326,7 +325,7 @@ func describeBuilder() {
 
 			Expect(state.NetworkInterfaces()).To(ContainElement(NetworkRef{
 				Name: "fake-network-name",
-				Interface: biproperty.Map{
+				Interface: map[string]interface{}{
 					"type":    "fake-network-type",
 					"default": []bideplmanifest.NetworkDefault{"dns", "gateway"},
 					"ip":      "1.2.3.4",
@@ -352,7 +351,7 @@ func describeBuilder() {
 
 					Expect(state.NetworkInterfaces()).To(ContainElement(NetworkRef{
 						Name: "fake-network-name",
-						Interface: biproperty.Map{
+						Interface: map[string]interface{}{
 							"type":    "dynamic",
 							"default": []bideplmanifest.NetworkDefault{"dns", "gateway"},
 							"cloud_properties": biproperty.Map{
@@ -395,7 +394,7 @@ func describeBuilder() {
 
 					Expect(state.NetworkInterfaces()).To(ContainElement(NetworkRef{
 						Name: "fake-dynamic-network-name",
-						Interface: biproperty.Map{
+						Interface: map[string]interface{}{
 							"type":    "dynamic",
 							"default": []bideplmanifest.NetworkDefault{"dns", "gateway"},
 							"cloud_properties": biproperty.Map{
@@ -532,8 +531,8 @@ func describeBuilder() {
 			Expect(state.ToApplySpec()).To(Equal(bias.ApplySpec{
 				Deployment: "fake-deployment-name",
 				Index:      0,
-				Networks: map[string]biproperty.Map{
-					"fake-network-name": biproperty.Map{
+				Networks: map[string]interface{}{
+					"fake-network-name": map[string]interface{}{
 						"type":    "fake-network-type",
 						"default": []bideplmanifest.NetworkDefault{"dns", "gateway"},
 						"ip":      "1.2.3.4",
