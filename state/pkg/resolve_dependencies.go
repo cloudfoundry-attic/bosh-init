@@ -1,11 +1,20 @@
 package pkg
 
 import (
+	"fmt" //DEBUG
+
 	birelpkg "github.com/cloudfoundry/bosh-init/release/pkg"
 )
 
 func ResolveDependencies(pkg *birelpkg.Package) []*birelpkg.Package {
-	return reverse(resolveInner(pkg, []*birelpkg.Package{}))
+	fmt.Printf("====> ResolveDependencies: %s\n", pkg.Name) //DEBUG
+	deps := reverse(resolveInner(pkg, []*birelpkg.Package{}))
+	fmt.Printf("====> deps(%d): ", len(deps)) //DEBUG
+	for _, d := range deps {
+		fmt.Printf(" %s,", d.Name) //DEBUG
+	}
+	fmt.Printf("\n============================\n\n") //DEBUG
+	return deps
 }
 
 func resolveInner(pkg *birelpkg.Package, noFollow []*birelpkg.Package) []*birelpkg.Package {
