@@ -39,7 +39,7 @@ func NewFactory(logger boshlog.Logger) Factory {
 func (s *factory) NewSSHTunnel(options Options) SSHTunnel {
 	timeService := clock.NewClock()
 	return &sshTunnel{
-		connectionRefusedTimeout: 5 * time.Minute,
+		connectionRefusedTimeout: 60 * time.Minute,
 		authFailureTimeout:       2 * time.Minute,
 		startDialDelay:           500 * time.Millisecond,
 		timeService:              timeService,
