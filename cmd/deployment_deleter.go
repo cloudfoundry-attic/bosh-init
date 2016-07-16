@@ -197,7 +197,8 @@ func (c *deploymentDeleter) deploymentManager(installation biinstall.Installatio
 	agentClient := c.agentClientFactory.NewAgentClient(directorID, installationMbus)
 
 	c.logger.Debug(c.logTag, "Creating blobstore client...")
-	blobstore, err := c.blobstoreFactory.Create(installationMbus, bihttpclient.CreateDefaultClient())
+
+	blobstore, err := c.blobstoreFactory.Create(installationMbus, bihttpclient.CreateDefaultClientInsecureSkipVerify())
 	if err != nil {
 		return nil, bosherr.WrapError(err, "Creating blobstore client")
 	}
