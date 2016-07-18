@@ -14,7 +14,7 @@ import (
 )
 
 type Factory interface {
-	Create(string, http.Client) (Blobstore, error)
+	Create(string, *http.Client) (Blobstore, error)
 }
 
 type blobstoreFactory struct {
@@ -32,7 +32,7 @@ func NewBlobstoreFactory(uuidGenerator boshuuid.Generator, fs boshsys.FileSystem
 }
 
 //TODO: rename NewBlobstore
-func (f blobstoreFactory) Create(blobstoreURL string, httpClient http.Client) (Blobstore, error) {
+func (f blobstoreFactory) Create(blobstoreURL string, httpClient *http.Client) (Blobstore, error) {
 
 	logger := boshlog.NewLogger(boshlog.LevelNone)
 
@@ -45,7 +45,7 @@ func (f blobstoreFactory) Create(blobstoreURL string, httpClient http.Client) (B
 		Endpoint: fmt.Sprintf("%s/blobs", blobstoreConfig.Endpoint),
 		User:     blobstoreConfig.Username,
 		Password: blobstoreConfig.Password,
-	}, &httpClient, logger)
+	}, httpClient, logger)
 
 	return NewBlobstore(davClient, f.uuidGenerator, f.fs, f.logger), nil
 }

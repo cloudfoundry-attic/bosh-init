@@ -27,7 +27,7 @@ type Provider interface {
 	Get(Source, biui.Stage) (path string, err error)
 }
 
-var HTTPClient = http.Client{
+var HTTPClient = &http.Client{
 	Transport: &http.Transport{
 		Proxy: http.ProxyFromEnvironment,
 		Dial: (&net.Dialer{
