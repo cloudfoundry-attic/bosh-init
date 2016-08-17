@@ -26,6 +26,10 @@ func (w *ComboWriter) Writer(prefix string) io.Writer {
 }
 
 func (s prefixedWriter) Write(bytes []byte) (int, error) {
+	if len(bytes) == 0 {
+		return 0, nil
+	}
+
 	s.w.uiLock.Lock()
 	defer s.w.uiLock.Unlock()
 
