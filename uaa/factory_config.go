@@ -19,6 +19,8 @@ type Config struct {
 	ClientSecret string
 
 	CACert string
+
+	SkipSslValidation bool
 }
 
 func NewConfigFromURL(url string) (Config, error) {

@@ -10,17 +10,20 @@ import (
 type BasicLoginStrategy struct {
 	sessionFactory func(cmdconf.Config) Session
 
+	opts   BoshOpts
 	config cmdconf.Config
 	ui     boshui.UI
 }
 
 func NewBasicLoginStrategy(
 	sessionFactory func(cmdconf.Config) Session,
+	opts BoshOpts,
 	config cmdconf.Config,
 	ui boshui.UI,
 ) BasicLoginStrategy {
 	return BasicLoginStrategy{
 		sessionFactory: sessionFactory,
+		opts:           opts,
 		config:         config,
 		ui:             ui,
 	}
@@ -54,6 +57,7 @@ func (s BasicLoginStrategy) tryOnce(environment string, creds cmdconf.Creds) (bo
 	}
 
 	updatedConfig := s.config.SetCredentials(environment, creds)
+	updatedConfig = updatedConfig.SetSkipSslValidation(environment, s.opts.SkipSslValidationOpt)
 
 	sess := s.sessionFactory(updatedConfig)
 

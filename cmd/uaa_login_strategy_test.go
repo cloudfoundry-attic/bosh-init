@@ -19,6 +19,7 @@ import (
 var _ = Describe("UAALoginStrategy", func() {
 	var (
 		sessions map[cmdconf.Config]*fakecmd.FakeSession
+		opts     *BoshOpts
 		config   *fakecmdconf.FakeConfig
 		ui       *fakeui.FakeUI
 		strategy UAALoginStrategy
@@ -29,10 +30,11 @@ var _ = Describe("UAALoginStrategy", func() {
 		sessionFactory := func(config cmdconf.Config) Session {
 			return sessions[config]
 		}
+		opts = &BoshOpts{}
 		config = &fakecmdconf.FakeConfig{}
 		ui = &fakeui.FakeUI{}
 		logger := boshlog.NewLogger(boshlog.LevelNone)
-		strategy = NewUAALoginStrategy(sessionFactory, config, ui, logger)
+		strategy = NewUAALoginStrategy(sessionFactory, *opts, config, ui, logger)
 	})
 
 	Describe("Try", func() {
@@ -57,6 +59,10 @@ var _ = Describe("UAALoginStrategy", func() {
 				updatedConfig.CredentialsStub = func(t string) cmdconf.Creds {
 					return map[string]cmdconf.Creds{environment: creds}[t]
 				}
+				return updatedConfig
+			}
+			updatedConfig.SetSkipSslValidationStub = func(environment string, flag bool) cmdconf.Config {
+				updatedConfig.SkipSslValidationReturns(flag)
 				return updatedConfig
 			}
 

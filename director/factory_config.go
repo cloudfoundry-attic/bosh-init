@@ -18,6 +18,8 @@ type Config struct {
 	// CA certificate is not required
 	CACert string
 
+	SkipSslValidation bool
+
 	Username string
 	Password string
 

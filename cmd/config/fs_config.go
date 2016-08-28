@@ -13,6 +13,7 @@ current_environment: https://192.168.50.4:25555
 environments:
 - url: https://192.168.50.4:25555
   ca_cert: |...
+  skip_ssl_validation: false
   current_deployment: test
   username: admin
   password: admin
@@ -33,8 +34,9 @@ type fsConfigSchema struct {
 }
 
 type fsConfigSchema_Environment struct {
-	URL    string `yaml:"url"`
-	CACert string `yaml:"ca_cert,omitempty"`
+	URL               string `yaml:"url"`
+	CACert            string `yaml:"ca_cert,omitempty"`
+	SkipSslValidation bool   `yaml:"skip_ssl_validation,omitempty"`
 
 	Alias string `yaml:"alias,omitempty"`
 
@@ -129,6 +131,21 @@ func (c FSConfig) readCACert(caCert string) string {
 	}
 
 	return readCACert
+}
+
+func (c FSConfig) SkipSslValidation(urlOrAlias string) bool {
+	_, tg := c.findOrCreateEnvironment(urlOrAlias)
+	return tg.SkipSslValidation
+}
+
+func (c FSConfig) SetSkipSslValidation(urlOrAlias string, flag bool) Config {
+	config := c.deepCopy()
+
+	i, tg := config.findOrCreateEnvironment(urlOrAlias)
+	tg.SkipSslValidation = flag
+	config.schema.Environments[i] = tg
+
+	return config
 }
 
 func (c FSConfig) Credentials(urlOrAlias string) Creds {

@@ -46,6 +46,23 @@ type FakeConfig struct {
 	cACertReturns struct {
 		result1 string
 	}
+	SkipSslValidationStub        func(url string) bool
+	skipSslValidationMutex       sync.RWMutex
+	skipSslValidationArgsForCall []struct {
+		url string
+	}
+	skipSslValidationReturns struct {
+		result1 bool
+	}
+	SetSkipSslValidationStub        func(url string, flag bool) config.Config
+	setSkipSslValidationMutex       sync.RWMutex
+	setSkipSslValidationArgsForCall []struct {
+		url  string
+		flag bool
+	}
+	setSkipSslValidationReturns struct {
+		result1 config.Config
+	}
 	CredentialsStub        func(url string) config.Creds
 	credentialsMutex       sync.RWMutex
 	credentialsArgsForCall []struct {
@@ -239,6 +256,71 @@ func (fake *FakeConfig) CACertReturns(result1 string) {
 	fake.CACertStub = nil
 	fake.cACertReturns = struct {
 		result1 string
+	}{result1}
+}
+
+func (fake *FakeConfig) SkipSslValidation(url string) bool {
+	fake.skipSslValidationMutex.Lock()
+	fake.skipSslValidationArgsForCall = append(fake.skipSslValidationArgsForCall, struct {
+		url string
+	}{url})
+	fake.skipSslValidationMutex.Unlock()
+	if fake.SkipSslValidationStub != nil {
+		return fake.SkipSslValidationStub(url)
+	} else {
+		return fake.skipSslValidationReturns.result1
+	}
+}
+
+func (fake *FakeConfig) SkipSslValidationCallCount() int {
+	fake.skipSslValidationMutex.RLock()
+	defer fake.skipSslValidationMutex.RUnlock()
+	return len(fake.skipSslValidationArgsForCall)
+}
+
+func (fake *FakeConfig) SkipSslValidationArgsForCall(i int) string {
+	fake.skipSslValidationMutex.RLock()
+	defer fake.skipSslValidationMutex.RUnlock()
+	return fake.skipSslValidationArgsForCall[i].url
+}
+
+func (fake *FakeConfig) SkipSslValidationReturns(result1 bool) {
+	fake.SkipSslValidationStub = nil
+	fake.skipSslValidationReturns = struct {
+		result1 bool
+	}{result1}
+}
+
+func (fake *FakeConfig) SetSkipSslValidation(url string, flag bool) config.Config {
+	fake.setSkipSslValidationMutex.Lock()
+	fake.setSkipSslValidationArgsForCall = append(fake.setSkipSslValidationArgsForCall, struct {
+		url  string
+		flag bool
+	}{url, flag})
+	fake.setSkipSslValidationMutex.Unlock()
+	if fake.SetSkipSslValidationStub != nil {
+		return fake.SetSkipSslValidationStub(url, flag)
+	} else {
+		return fake.setSkipSslValidationReturns.result1
+	}
+}
+
+func (fake *FakeConfig) SetSkipSslValidationCallCount() int {
+	fake.setSkipSslValidationMutex.RLock()
+	defer fake.setSkipSslValidationMutex.RUnlock()
+	return len(fake.setSkipSslValidationArgsForCall)
+}
+
+func (fake *FakeConfig) SetSkipSslValidationArgsForCall(i int) (string, bool) {
+	fake.setSkipSslValidationMutex.RLock()
+	defer fake.setSkipSslValidationMutex.RUnlock()
+	return fake.setSkipSslValidationArgsForCall[i].url, fake.setSkipSslValidationArgsForCall[i].flag
+}
+
+func (fake *FakeConfig) SetSkipSslValidationReturns(result1 config.Config) {
+	fake.SetSkipSslValidationStub = nil
+	fake.setSkipSslValidationReturns = struct {
+		result1 config.Config
 	}{result1}
 }
 

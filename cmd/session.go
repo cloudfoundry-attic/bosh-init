@@ -74,6 +74,7 @@ func (c SessionImpl) UAA() (boshuaa.UAA, error) {
 	}
 
 	uaaConfig.CACert = c.context.CACert()
+	uaaConfig.SkipSslValidation = c.context.SkipSslValidation()
 
 	creds := c.Credentials()
 	uaaConfig.Client = creds.Client
@@ -97,6 +98,7 @@ func (c *SessionImpl) Director() (boshdir.Director, error) {
 	}
 
 	dirConfig.CACert = c.context.CACert()
+	dirConfig.SkipSslValidation = c.context.SkipSslValidation()
 
 	creds := c.Credentials()
 
@@ -142,6 +144,7 @@ func (c SessionImpl) AnonymousDirector() (boshdir.Director, error) {
 	}
 
 	dirConfig.CACert = c.context.CACert()
+	dirConfig.SkipSslValidation = c.context.SkipSslValidation()
 
 	return boshdir.NewFactory(c.logger).New(dirConfig, nil, nil)
 }

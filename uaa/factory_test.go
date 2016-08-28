@@ -74,5 +74,33 @@ var _ = Describe("Factory", func() {
 			_, err = uaa.ClientCredentialsGrant()
 			Expect(err).ToNot(HaveOccurred())
 		})
+
+		It("UAA succeeds making a request with skip-ssl-validation", func() {
+			server := ghttp.NewUnstartedServer()
+			server.HTTPTestServer.StartTLS()
+
+			config, err := NewConfigFromURL(server.URL())
+			Expect(err).ToNot(HaveOccurred())
+
+			config.Client = "client"
+			config.ClientSecret = "client-secret"
+			config.SkipSslValidation = true
+
+			logger := boshlog.NewLogger(boshlog.LevelNone)
+
+			uaa, err := NewFactory(logger).New(config)
+			Expect(err).ToNot(HaveOccurred())
+
+			server.AppendHandlers(
+				ghttp.CombineHandlers(
+					ghttp.VerifyRequest("POST", "/oauth/token", "grant_type=client_credentials"),
+					ghttp.VerifyBasicAuth("client", "client-secret"),
+					ghttp.RespondWith(http.StatusOK, `{}`),
+				),
+			)
+
+			_, err = uaa.ClientCredentialsGrant()
+			Expect(err).ToNot(HaveOccurred())
+		})
 	})
 })

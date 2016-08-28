@@ -18,6 +18,7 @@ import (
 var _ = Describe("BasicLoginStrategy", func() {
 	var (
 		sessions map[cmdconf.Config]*fakecmd.FakeSession
+		opts     *BoshOpts
 		config   *fakecmdconf.FakeConfig
 		ui       *fakeui.FakeUI
 		strategy BasicLoginStrategy
@@ -28,9 +29,10 @@ var _ = Describe("BasicLoginStrategy", func() {
 		sessionFactory := func(config cmdconf.Config) Session {
 			return sessions[config]
 		}
+		opts = &BoshOpts{}
 		config = &fakecmdconf.FakeConfig{}
 		ui = &fakeui.FakeUI{}
-		strategy = NewBasicLoginStrategy(sessionFactory, config, ui)
+		strategy = NewBasicLoginStrategy(sessionFactory, *opts, config, ui)
 	})
 
 	Describe("Try", func() {
@@ -52,6 +54,10 @@ var _ = Describe("BasicLoginStrategy", func() {
 				updatedConfig.CredentialsStub = func(t string) cmdconf.Creds {
 					return map[string]cmdconf.Creds{environment: creds}[t]
 				}
+				return updatedConfig
+			}
+			updatedConfig.SetSkipSslValidationStub = func(environment string, flag bool) cmdconf.Config {
+				updatedConfig.SkipSslValidationReturns(flag)
 				return updatedConfig
 			}
 

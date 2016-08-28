@@ -19,23 +19,6 @@ var _ = Describe("Factory", func() {
 			Expect(err).To(HaveOccurred())
 		})
 
-		It("returns error if TLS cannot be verified", func() {
-			server := ghttp.NewTLSServer()
-			defer server.Close()
-
-			config, err := NewConfigFromURL(server.URL())
-			Expect(err).ToNot(HaveOccurred())
-
-			logger := boshlog.NewLogger(boshlog.LevelNone)
-
-			director, err := NewFactory(logger).New(config, nil, nil)
-			Expect(err).ToNot(HaveOccurred())
-
-			_, err = director.Info()
-			Expect(err).To(HaveOccurred())
-			Expect(err.Error()).To(ContainSubstring("x509: certificate signed by unknown authority"))
-		})
-
 		Context("with valid TLS server", func() {
 			var (
 				server *ghttp.Server
@@ -166,6 +149,100 @@ var _ = Describe("Factory", func() {
 					ghttp.CombineHandlers(
 						ghttp.VerifyRequest("GET", "/info"),
 						VerifyHeaderDoesNotExist("Authorization"),
+						VerifyHeaderDoesNotExist("Referer"),
+						ghttp.RespondWith(http.StatusOK, `{}`),
+					),
+				)
+
+				_, err = director.Info()
+				Expect(err).ToNot(HaveOccurred())
+			})
+		})
+
+		Context("with TLS server with invalid certificate", func() {
+			var (
+				server *ghttp.Server
+			)
+
+			BeforeEach(func() {
+				server = ghttp.NewUnstartedServer()
+				server.HTTPTestServer.StartTLS()
+			})
+
+			AfterEach(func() {
+				server.Close()
+			})
+
+			DirectorRedirect := func(config Config) http.Header {
+				h := http.Header{}
+				// URL does not include port, creds
+				h.Add("Location", "https://"+config.Host+"/info")
+				h.Add("Referer", "referer")
+				return h
+			}
+
+			VerifyHeaderDoesNotExist := func(key string) http.HandlerFunc {
+				cKey := http.CanonicalHeaderKey(key)
+				return func(w http.ResponseWriter, req *http.Request) {
+					for k, _ := range req.Header {
+						Expect(k).ToNot(Equal(cKey), "Header '%s' must not exist", cKey)
+					}
+				}
+			}
+
+			It("fails making requests without skip-ssl-validation", func() {
+				config, err := NewConfigFromURL(server.URL())
+				Expect(err).ToNot(HaveOccurred())
+
+				config.Username = "username"
+				config.Password = "password"
+
+				logger := boshlog.NewLogger(boshlog.LevelNone)
+
+				director, err := NewFactory(logger).New(config, nil, nil)
+				Expect(err).ToNot(HaveOccurred())
+
+				server.AppendHandlers(
+					ghttp.CombineHandlers(
+						ghttp.VerifyRequest("GET", "/info"),
+						ghttp.VerifyBasicAuth("username", "password"),
+						ghttp.RespondWith(http.StatusFound, nil, DirectorRedirect(config)),
+					),
+					ghttp.CombineHandlers(
+						ghttp.VerifyRequest("GET", "/info"),
+						ghttp.VerifyBasicAuth("username", "password"),
+						VerifyHeaderDoesNotExist("Referer"),
+						ghttp.RespondWith(http.StatusOK, `{}`),
+					),
+				)
+
+				_, err = director.Info()
+				Expect(err).To(HaveOccurred())
+				Expect(err.Error()).To(ContainSubstring("x509: certificate signed by unknown authority"))
+			})
+
+			It("succeeds making requests with skip-ssl-validation", func() {
+				config, err := NewConfigFromURL(server.URL())
+				Expect(err).ToNot(HaveOccurred())
+
+				config.Username = "username"
+				config.Password = "password"
+				config.SkipSslValidation = true
+
+				logger := boshlog.NewLogger(boshlog.LevelNone)
+
+				director, err := NewFactory(logger).New(config, nil, nil)
+				Expect(err).ToNot(HaveOccurred())
+
+				server.AppendHandlers(
+					ghttp.CombineHandlers(
+						ghttp.VerifyRequest("GET", "/info"),
+						ghttp.VerifyBasicAuth("username", "password"),
+						ghttp.RespondWith(http.StatusFound, nil, DirectorRedirect(config)),
+					),
+					ghttp.CombineHandlers(
+						ghttp.VerifyRequest("GET", "/info"),
+						ghttp.VerifyBasicAuth("username", "password"),
 						VerifyHeaderDoesNotExist("Referer"),
 						ghttp.RespondWith(http.StatusOK, `{}`),
 					),
