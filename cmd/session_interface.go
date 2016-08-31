@@ -11,6 +11,7 @@ import (
 type SessionContext interface {
 	Environment() string
 	CACert() string
+	SkipSslValidation() bool
 	Credentials() cmdconf.Creds
 
 	Deployment() string

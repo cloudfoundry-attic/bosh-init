@@ -355,6 +355,50 @@ var _ = Describe("FSConfig", func() {
 		})
 	})
 
+	Describe("SetDeployment/SkipSslValidation", func() {
+		It("returns false if environment is not found", func() {
+			Expect(config.SkipSslValidation("url")).To(Equal(false))
+		})
+
+		It("returns false if environment is found but skip-ssl-validation is not set", func() {
+			updatedConfig := config.SetEnvironment("url", "", "")
+			Expect(updatedConfig.SkipSslValidation("url")).To(Equal(false))
+
+			err := updatedConfig.Save()
+			Expect(err).ToNot(HaveOccurred())
+
+			reloadedConfig := readConfig()
+			Expect(err).ToNot(HaveOccurred())
+			Expect(reloadedConfig.SkipSslValidation("url")).To(Equal(false))
+		})
+
+		It("returns true if environment is found and skip-ssl-validation is set", func() {
+			updatedConfig := config.SetEnvironment("url", "", "")
+			updatedConfig = config.SetSkipSslValidation("url", true)
+			Expect(updatedConfig.SkipSslValidation("url")).To(Equal(true))
+
+			err := updatedConfig.Save()
+			Expect(err).ToNot(HaveOccurred())
+
+			reloadedConfig := readConfig()
+			Expect(err).ToNot(HaveOccurred())
+			Expect(reloadedConfig.SkipSslValidation("url")).To(Equal(true))
+		})
+
+		It("returns true for alias if environment is found and skip-ssl-validation is set", func() {
+			updatedConfig := config.SetEnvironment("url", "alias", "")
+			updatedConfig = config.SetSkipSslValidation("alias", true)
+			Expect(updatedConfig.SkipSslValidation("alias")).To(Equal(true))
+
+			err := updatedConfig.Save()
+			Expect(err).ToNot(HaveOccurred())
+
+			reloadedConfig := readConfig()
+			Expect(err).ToNot(HaveOccurred())
+			Expect(reloadedConfig.SkipSslValidation("alias")).To(Equal(true))
+		})
+	})
+
 	Describe("SetDeployment/Deployment", func() {
 		It("returns empty if environment is not found", func() {
 			Expect(config.Deployment("url")).To(Equal(""))

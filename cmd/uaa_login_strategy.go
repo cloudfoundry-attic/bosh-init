@@ -11,6 +11,7 @@ import (
 type UAALoginStrategy struct {
 	sessionFactory func(cmdconf.Config) Session
 
+	opts   BoshOpts
 	config cmdconf.Config
 	ui     boshui.UI
 
@@ -23,12 +24,14 @@ type UAALoginStrategy struct {
 
 func NewUAALoginStrategy(
 	sessionFactory func(cmdconf.Config) Session,
+	opts BoshOpts,
 	config cmdconf.Config,
 	ui boshui.UI,
 	logger boshlog.Logger,
 ) UAALoginStrategy {
 	return UAALoginStrategy{
 		sessionFactory: sessionFactory,
+		opts:           opts,
 		config:         config,
 		ui:             ui,
 
@@ -120,6 +123,7 @@ func (c UAALoginStrategy) tryUserOnce(environment string, prompts []boshuaa.Prom
 	}
 
 	updatedConfig := c.config.SetCredentials(environment, creds)
+	updatedConfig = updatedConfig.SetSkipSslValidation(environment, c.opts.SkipSslValidationOpt)
 
 	err = updatedConfig.Save()
 	if err != nil {

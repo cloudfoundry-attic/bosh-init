@@ -21,6 +21,12 @@ type FakeSessionContext struct {
 	cACertReturns     struct {
 		result1 string
 	}
+	SkipSslValidationStub        func() bool
+	skipSslValidationMutex       sync.RWMutex
+	skipSslValidationArgsForCall []struct{}
+	skipSslValidationReturns     struct {
+		result1 bool
+	}
 	CredentialsStub        func() cmdconf.Creds
 	credentialsMutex       sync.RWMutex
 	credentialsArgsForCall []struct{}
@@ -80,6 +86,30 @@ func (fake *FakeSessionContext) CACertReturns(result1 string) {
 	fake.CACertStub = nil
 	fake.cACertReturns = struct {
 		result1 string
+	}{result1}
+}
+
+func (fake *FakeSessionContext) SkipSslValidation() bool {
+	fake.skipSslValidationMutex.Lock()
+	fake.skipSslValidationArgsForCall = append(fake.skipSslValidationArgsForCall, struct{}{})
+	fake.skipSslValidationMutex.Unlock()
+	if fake.SkipSslValidationStub != nil {
+		return fake.SkipSslValidationStub()
+	} else {
+		return fake.skipSslValidationReturns.result1
+	}
+}
+
+func (fake *FakeSessionContext) SkipSslValidationCallCount() int {
+	fake.skipSslValidationMutex.RLock()
+	defer fake.skipSslValidationMutex.RUnlock()
+	return len(fake.skipSslValidationArgsForCall)
+}
+
+func (fake *FakeSessionContext) SkipSslValidationReturns(result1 bool) {
+	fake.SkipSslValidationStub = nil
+	fake.skipSslValidationReturns = struct {
+		result1 bool
 	}{result1}
 }
 

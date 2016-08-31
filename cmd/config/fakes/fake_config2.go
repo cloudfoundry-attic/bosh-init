@@ -50,6 +50,14 @@ func (f *FakeConfig2) CACert(environment string) string {
 	return f.Existing.EnvironmentCACert
 }
 
+func (f *FakeConfig2) SkipSslValidation(environment string) bool {
+	panic("Not implemented")
+}
+
+func (f *FakeConfig2) SetSkipSslValidation(environment string, flag bool) config.Config {
+	panic("Not implemented")
+}
+
 func (f *FakeConfig2) Credentials(environment string) config.Creds {
 	panic("Not implemented")
 }

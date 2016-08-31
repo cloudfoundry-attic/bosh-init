@@ -119,6 +119,14 @@ var _ = Describe("Opts", func() {
 				})
 			})
 
+			Describe("SkipSslValidationOpt", func() {
+				It("contains desired values", func() {
+					Expect(getStructTagForName("SkipSslValidationOpt", opts)).To(Equal(
+						`long:"skip-ssl-validation" short:"k" description:"Skip SSL certificate validation (Please don't)"`,
+					))
+				})
+			})
+
 			Describe("UsernameOpt", func() {
 				It("contains desired values", func() {
 					Expect(getStructTagForName("UsernameOpt", opts)).To(Equal(

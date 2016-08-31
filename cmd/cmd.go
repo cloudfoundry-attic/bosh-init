@@ -78,8 +78,8 @@ func (c Cmd) Execute() (cmdErr error) {
 		}
 
 		config := c.config()
-		basicStrategy := NewBasicLoginStrategy(sessionFactory, config, deps.UI)
-		uaaStrategy := NewUAALoginStrategy(sessionFactory, config, deps.UI, deps.Logger)
+		basicStrategy := NewBasicLoginStrategy(sessionFactory, *c.BoshOpts, config, deps.UI)
+		uaaStrategy := NewUAALoginStrategy(sessionFactory, *c.BoshOpts, config, deps.UI, deps.Logger)
 
 		sess := NewSessionFromOpts(*c.BoshOpts, c.config(), deps.UI, true, true, deps.FS, deps.Logger)
 

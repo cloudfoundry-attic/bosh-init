@@ -14,6 +14,8 @@ type BoshOpts struct {
 	EnvironmentOpt string `long:"environment" short:"e" description:"Director environment name or URL" env:"BOSH_ENVIRONMENT"`
 	CACertOpt      string `long:"ca-cert"               description:"Director CA certificate path or value" env:"BOSH_CA_CERT"`
 
+	SkipSslValidationOpt bool `long:"skip-ssl-validation" short:"k" description:"Skip SSL certificate validation (Please don't)"`
+
 	// Specify basic credentaials
 	UsernameOpt string `long:"user"     description:"Override username" env:"BOSH_USER"`
 	PasswordOpt string `long:"password" description:"Override password" env:"BOSH_PASSWORD"`

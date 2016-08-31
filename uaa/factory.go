@@ -2,6 +2,7 @@ package uaa
 
 import (
 	"fmt"
+	"net/http"
 	"net/url"
 
 	bosherr "github.com/cloudfoundry/bosh-utils/errors"
@@ -48,7 +49,13 @@ func (f Factory) httpClient(config Config) (Client, error) {
 		f.logger.Debug(f.logTag, "Using custom root CAs")
 	}
 
-	rawClient := boshhttp.CreateDefaultClient(certPool)
+	var rawClient *http.Client
+	if config.SkipSslValidation {
+		rawClient = boshhttp.CreateDefaultClientInsecureSkipVerify()
+		f.logger.Debug(f.logTag, "Skipping SSL validation")
+	} else {
+		rawClient = boshhttp.CreateDefaultClient(certPool)
+	}
 
 	httpClient := boshhttp.NewHTTPClient(rawClient, f.logger)
 

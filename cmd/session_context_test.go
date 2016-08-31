@@ -173,6 +173,33 @@ var _ = Describe("SessionContextImpl", func() {
 		})
 	})
 
+	Describe("SkipSslValidation", func() {
+		BeforeEach(func() {
+			opts.EnvironmentOpt = "opt-url"
+		})
+
+		It("returns global option if provided", func() {
+			config.SkipSslValidationReturns(true)
+
+			opts.SkipSslValidationOpt = true
+
+			Expect(build().SkipSslValidation()).To(Equal(true))
+		})
+
+		It("uses config value for current environment if no global option is provided", func() {
+			config.SkipSslValidationStub = func(environment string) bool {
+				Expect(environment).To(Equal("opt-url"))
+				return true
+			}
+
+			Expect(build().SkipSslValidation()).To(Equal(true))
+		})
+
+		It("returns false if neither global option or config value is set", func() {
+			Expect(build().SkipSslValidation()).To(Equal(false))
+		})
+	})
+
 	Describe("Deployment", func() {
 		BeforeEach(func() {
 			opts.EnvironmentOpt = "opt-url"

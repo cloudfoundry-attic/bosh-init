@@ -68,6 +68,13 @@ func (c SessionContextImpl) CACert() string {
 	return c.config.CACert(c.Environment())
 }
 
+func (c SessionContextImpl) SkipSslValidation() bool {
+	if c.opts.SkipSslValidationOpt {
+		return true
+	}
+	return c.config.SkipSslValidation(c.Environment())
+}
+
 func (c SessionContextImpl) Deployment() string {
 	if len(c.opts.DeploymentOpt) > 0 {
 		return c.opts.DeploymentOpt

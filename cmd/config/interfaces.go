@@ -9,6 +9,8 @@ type Config interface {
 	SetEnvironment(urlOrAlias, alias, caCert string) Config
 
 	CACert(url string) string
+	SkipSslValidation(url string) bool
+	SetSkipSslValidation(url string, flag bool) Config
 
 	Credentials(url string) Creds
 	SetCredentials(url string, creds Creds) Config
