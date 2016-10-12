@@ -2,9 +2,8 @@
 
 set -eux
 
-GOROOT=/usr/local/go
-GO_ARCHIVE_URL=https://storage.googleapis.com/golang/go1.7.1.linux-amd64.tar.gz
-GO_ARCHIVE_SHA256=43ad621c9b014cde8db17393dc108378d37bc853aa351a6c74bf6432c1bbd182
+source deps-golang
+
 GO_ARCHIVE=$(basename $GO_ARCHIVE_URL)
 
 echo "Downloading go..."

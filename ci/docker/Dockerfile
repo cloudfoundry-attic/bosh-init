@@ -33,9 +33,9 @@ RUN cd /tmp && ./install-ruby.sh && rm install-ruby.sh
 #global
 ENV GOROOT /usr/local/go
 ENV PATH $GOROOT/bin:$PATH
-ADD install-go.sh /tmp/install-go.sh
+ADD install-go.sh deps-golang /tmp/
 RUN chmod a+x /tmp/install-go.sh
-RUN cd /tmp && ./install-go.sh && rm install-go.sh
+RUN cd /tmp && ./install-go.sh && rm install-go.sh deps-golang
 
 ADD root_bashrc /root/.bashrc
 

@@ -13,6 +13,8 @@ filename="bosh-init-${semver}-${GOOS}-${GOARCH}"
 
 cd gopath/src/github.com/cloudfoundry/bosh-init
 
+bin/require-ci-golang-version
+
 git_rev=`git rev-parse --short HEAD`
 version="${semver}-${git_rev}-${timestamp}"
 
