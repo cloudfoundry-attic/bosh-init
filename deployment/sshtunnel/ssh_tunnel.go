@@ -17,7 +17,6 @@ import (
 
 type SSHTunnel interface {
 	Start(chan<- error, chan<- error)
-	Stop() error
 }
 
 type sshTunnel struct {
@@ -159,14 +158,6 @@ func (s *sshTunnel) Start(readyErrCh chan<- error, errCh chan<- error) {
 			}
 		}()
 	}
-}
-
-func (s *sshTunnel) Stop() error {
-	if s.remoteListener == nil {
-		return nil
-	}
-
-	return s.remoteListener.Close()
 }
 
 type SSHRetryStrategy struct {
