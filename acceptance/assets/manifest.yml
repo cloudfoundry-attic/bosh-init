@@ -32,7 +32,7 @@ networks:
 
 cloud_provider:
   template:
-    name: cpi
+    name: warden_cpi
     release: bosh-warden-cpi
   ssh_tunnel:
     host: 10.244.0.42
