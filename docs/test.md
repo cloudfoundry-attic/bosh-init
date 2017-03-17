@@ -53,7 +53,7 @@ that's going to be the bosh-init source directory. To satisfy the
 Now we can fly execute:
 
 ```
-./fly -t bosh-init -k execute -p -c <path-to-test-acceptance.yml> -i bosh-init=<path-to-source-dir> -i bosh-warden-cpi-release=<path-to-dir-containing-cpi-release.tgz>
+./fly -t production execute -p -c <path-to-test-acceptance.yml> -i bosh-init=<path-to-source-dir> -i bosh-warden-cpi-release=<path-to-dir-containing-cpi-release.tgz>
 ```
 
 ### Running the acceptance tests directly
