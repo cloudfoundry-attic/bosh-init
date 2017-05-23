@@ -23,4 +23,6 @@ sed 's/\[DEV BUILD\]/'"$version"'/' cmd/version.go > cmd/version.tmp && mv cmd/v
 
 bin/build
 
+shasum out/bosh-init
+
 mv out/bosh-init $base/compiled-${GOOS}/${filename}
