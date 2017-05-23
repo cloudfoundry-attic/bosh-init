@@ -3,7 +3,6 @@
 `bosh-init` is a tool used to create and update the Director (its VM and persistent disk) in a BOSH environment.
 
 * Documentation: [bosh.io/docs](https://bosh.io/docs)
-* IRC: [`#bosh` on freenode](http://webchat.freenode.net/?channels=bosh)
 * Mailing list: [cf-bosh](https://lists.cloudfoundry.org/pipermail/cf-bosh)
 * CI: [https://main.bosh-ci.cf-app.com/pipelines/bosh-init](https://main.bosh-ci.cf-app.com/pipelines/bosh-init)
 * Roadmap: [Pivotal Tracker](https://www.pivotaltracker.com/n/projects/1133984)
